@@ -1,0 +1,37 @@
+beautifulsoup4==4.13.3
+blinker==1.9.0
+bs4==0.0.2
+certifi==2025.1.31
+charset-normalizer==3.4.1
+click==8.1.8
+Cython==3.0.11
+Flask==3.1.0
+Flask-SQLAlchemy==3.1.1
+gunicorn==23.0.0
+idna==3.10
+itsdangerous==2.2.0
+Jinja2==3.1.5
+joblib==1.4.2
+letterboxdpy @ git+https://github.com/nmcassa/letterboxdpy.git@43f5c424ddec9404be8ed86a9ab92fc65159e7ba
+llvmlite==0.44.0
+lxml==5.3.0
+MarkupSafe==3.0.2
+numba==0.61.0
+numpy==2.1.3
+packaging==24.2
+pandas==2.2.3
+python-dateutil==2.9.0.post0
+pytz==2025.1
+requests==2.32.3
+scikit-learn==1.6.1
+scipy==1.15.1
+six==1.17.0
+soupsieve==2.6
+SQLAlchemy==2.0.38
+threadpoolctl==3.5.0
+tqdm==4.67.1
+typing_extensions==4.12.2
+tzdata==2025.1
+urllib3==2.3.0
+Werkzeug==3.1.3
+matrix_factorization @ git+https://github.com/Quang-Vinh/matrix-factorization.git

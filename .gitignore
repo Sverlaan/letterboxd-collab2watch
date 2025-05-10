@@ -1,0 +1,14 @@
+# Ignore the following files and folders
+node_modules/
+_instance/
+_overig/
+.venv/
+__pycache__/
+createdb.py
+.DS_Store
+templates/temp.html
+_data/
+.vscode/
+.ipynb_checkpoints/
+surprise.ipynb
+.env

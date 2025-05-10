@@ -1,0 +1,268 @@
+
+/* Custom card for user cards */
+.user-card {
+    border-radius: 1.3rem; /* Larger border radius */
+    transition: transform 0.3s ease;
+}
+
+.user-card:hover {
+    transform: scale(1.05); /* Slight enlargement */
+    /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);  Optional: subtle shadow */
+}
+
+
+
+
+
+
+
+/* .carousel-control-prev,
+.carousel-control-next {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    position: absolute;
+    z-index: 11;
+    width: 50px;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+} 
+
+.carousel:hover .carousel-control-prev,
+.carousel:hover .carousel-control-next {
+    opacity: 1;
+}
+*/
+
+/* Image zoom effect */
+.carousel-inner img {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Keep image zoomed when hovering over the carousel or the buttons */
+.carousel:hover .carousel-inner img,
+.carousel-control-prev:hover ~ .carousel-inner img,
+.carousel-control-next:hover ~ .carousel-inner img {
+    transform: scale(1.1);
+}
+
+
+
+
+
+
+
+/* Custom color for scores */
+.text-score {
+  color: goldenrod !important;
+}
+[data-bs-theme="dark"] .text-score {
+  color: gold !important;
+}
+
+/* Change scrollbar color with light/dark theme */
+:root {
+    --scrollbar-bg: #f0f0f0; /* Light mode scrollbar background */
+    --scrollbar-thumb: #b0b0b0; /* Light mode scrollbar thumb */
+}
+[data-bs-theme="dark"] {
+    --scrollbar-bg: #2c2c2c; /* Dark mode scrollbar background */
+    --scrollbar-thumb: #888; /* Dark mode scrollbar thumb */
+}
+
+
+/* Apply the scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 10px;
+}
+
+#RewatchContainer {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+#RewatchContainer::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+#userScoresRow {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+#userScoresRow::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+#userScoresRow2 {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+#userScoresRow2::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+/* Hide horizontal scrollbar cross-browser */
+.no-scrollbar {
+    scrollbar-width: none;         /* Firefox */
+    -ms-overflow-style: none;     /* IE and Edge */
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;                /* Chrome, Safari */
+}
+
+
+
+
+.banner-fade {
+  position: relative;
+  z-index: 0;
+}
+
+.banner-fade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to bottom, var(--bs-body-bg), rgba(0,0,0,0) 10%),
+    linear-gradient(to top, var(--bs-body-bg), rgba(0,0,0,0) 10%),
+    linear-gradient(to right, var(--bs-body-bg), rgba(0,0,0,0) 0%),
+    linear-gradient(to left, var(--bs-body-bg), rgba(0,0,0,0) 0%);
+}
+
+
+
+
+
+
+
+/* Firefox scrollbar support */
+html {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+
+
+/* Add a hover effect to images */
+.hover-zoom img {
+    transition: transform 0.3s ease;
+}
+.hover-zoom img:hover {
+    transform: scale(1.10);
+}
+
+/* For the edit blacklist button */
+.edit-blacklist-link:hover {
+    text-decoration: underline !important;
+}
+
+
+/* For movie banners on movie page */
+.card-img-wrap {
+  overflow: hidden;
+  position: relative;
+}
+.card-img-wrap:after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+}
+.card-img-wrap img {
+  transition: transform .25s;
+  width: 100%;
+}
+.card-img-wrap:hover img {
+  transform: scale(1.1);
+}
+
+
+.carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    text-align: center;
+    color: rgb(180, 180, 180);
+    width: 100%;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    background: linear-gradient(to top, rgba(79, 79, 79, 0.7), rgba(79, 79, 79, 0.7)); 
+    z-index: 10;
+    pointer-events: none; /* Prevents clicks on the caption from interfering with controls */
+}
+
+/* For the recommendation cards */
+.rec-card-img {
+    height: 120px;
+    object-fit: cover;
+}
+.rec-card {
+    border-radius: 8px;
+    border-width: 0px;
+    background: var(--bs-secondary-bg);
+    height: 120px;  /* 120px */
+    transition: background-color 0.1s ease-in-out; /* Smooth transition */
+}
+.hover-zoom-rec-card .card:hover {
+    background-color: rgba(173, 216, 230, .5);
+}
+
+/* For the recommendation container scrollbar */
+#RecommendContainerReal::-webkit-scrollbar {
+    width: 8px;
+}
+#RecommendContainerReal::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 4px;
+}
+#RecommendContainerReal::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+#RecommendContainerReal::-webkit-scrollbar-track {
+    background: var(--bs-secondary-bg);
+
+}
+
+#RewatchContainer::-webkit-scrollbar {
+    height: 8px;
+}
+#RewatchContainer::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 4px;
+}
+#RewatchContainer::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+#RewatchContainer::-webkit-scrollbar-track {
+    background: var(--bs-secondary-bg);
+
+}
+
+/* To remove spacing between elements */
+.no-spacing {
+  margin: 0;
+  line-height: 1.2; /* Adjust if needed */
+}
+
