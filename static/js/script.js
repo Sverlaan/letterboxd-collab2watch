@@ -156,224 +156,11 @@ async function InitializeAndTrain() {
     }
 }
 
-async function FetchCommonWatchlist(minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
-    try {
-        const usernames = allUsers.map(u => u.username).join(",");
-        const response = await fetch(`/fetch_common_watchlist/${usernames}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
-        if (!response.ok) throw new Error("Something went wrong getting common watchlist");
-        const result = await response.json();
-
-        const realContent = document.getElementById("realContent");
-        const commonWatchlistCount = document.getElementById("commonWatchlistCount");
-        const subtitle = document.getElementById("commonWatchlistSubtitle");
-
-        // Clear previous content
-        realContent.innerHTML = "";
-
-        let data = [];
-        if (result.success) {
-            console.log("Common watchlist fetched successfully");
-            data = result.movies;
-            subtitle.textContent = "Let's see what movies you all want to watch!";
-        } else {
-            console.log("No common movies found");
-            subtitle.textContent = "No common movies found in your watchlists";
-        }
-
-        commonWatchlistCount.textContent = data.length;
-
-        // Create horizontally scrollable container
-        const scrollContainer = document.createElement("div");
-        scrollContainer.style.display = "flex";
-        scrollContainer.style.overflowX = "auto";
-        scrollContainer.style.gap = "2rem";
-        scrollContainer.style.padding = "1.2rem 1.2rem"; // Only vertical padding
-        scrollContainer.classList.add("no-scrollbar");
-
-        realContent.appendChild(scrollContainer);
-
-        data.forEach(movie => {
-            const card = document.createElement("div");
-            card.style.minWidth = "250px"; // Fixed size for flex layout
-            card.style.flexShrink = "0";
-            card.innerHTML = `
-                <img src="${movie.poster}" class="card card-img-top rounded open-movie-modal" alt="${movie.title}" slug="${movie.slug}">
-            `;
-            scrollContainer.appendChild(card);
-        });
-
-    } catch (error) {
-        console.error(error);
-    }
-}
 
 
 
 
 
-
-
-
-// Fetch single watchlist from Flask backend and populate the DOM
-async function FetchSingleWatchlist(minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
-    try {
-
-        const all_usernames = allUsers.map(u => u.username).join(",");
-
-        const superContainer = document.getElementById("SingleWatchlistsContainer");
-
-
-        const height = allUsers.length * 261;
-        superContainer.style.height = `${height}px`;
-
-        // delete all existing containers
-        while (superContainer.firstChild) {
-            superContainer.removeChild(superContainer.firstChild);
-        }
-
-        let index = 0
-        for (let user of allUsers) {
-
-            index = index+1;
-
-            const containerId = `SingleWatchlistContainer_${user.username}`;
-            const titleId = `SWL_${user.username}_title`;
-            const subtitleId = `SWL_${user.username}_subtitle`;
-            const contentId = `SWC_${user.username}_RC`;
-        
-            const isEven = index % 2 === 0;
-
-            // Remove the old container if it exists
-            const oldContainer = document.getElementById(containerId);
-            if (oldContainer) {
-                oldContainer.remove();
-            }
-        
-            const container = document.createElement('div');
-            container.className = "container hover-zoom bg-tertiary-subtle w-75 p-4";
-            container.id = containerId;
-        
-            container.innerHTML = `
-                <div class="row justify-content-evenly align-items-center">
-                    <div class="col-md-3 bg-tertiary justify-content-center align-items-center ${isEven ? '' : 'order-md-2'}">
-                        <h1 id="${titleId}" class="text-center">${user.name}'s</h1>
-                        <h1 class="text-center">Watchlist</h1>
-                        <p id="${subtitleId}" class="text-center text-muted">Movies the other(s) might like!</p>
-                    </div>
-                    <div class="col-md-8 justify-content-center align-items-center ${isEven ? '' : 'order-md-1'}">
-                        <div class="row row-cols-1 row-cols-md-5 g-4" id="${contentId}"></div>
-                    </div>
-                </div>
-            `;
-
-            superContainer.appendChild(container);
-
-
-            const response = await fetch(`/fetch_single_watchlist/${user.username}/${all_usernames}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
-            if (!response.ok) throw new Error(`Something went wrong getting single watchlist ${SWL_num}`);
-            const data = await response.json();
-
-            //Loop through the data and generate the cards
-            data.forEach(movie => {
-
-                // Generate each card
-                const card = document.createElement("div");
-                card.classList.add("col");
-                card.innerHTML = `
-                    <img src="${movie.poster}" 
-                        class="card card-img-top rounded open-movie-modal" 
-                        alt="${`${movie.title}`}"
-                        slug="${movie.slug}">
-                `;
-                document.getElementById(`${contentId}`).appendChild(card);
-            });
-        }
-            
-
-        
-
-    } catch (error) {
-        console.error(error);
-    }
-    
-}
-
-async function FetchRewatchlist(username, other_usernames, realRewatchCombo, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
-    try {
-        const response = await fetch(`/fetch_rewatchlist/${username}/${other_usernames}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
-        if (!response.ok) throw new Error("Something went wrong getting rewatchlist");
-        const data = await response.json();
-
-        // Clear existing items safely
-        realRewatchCombo.innerHTML = "";
-
-        const fragment = document.createDocumentFragment();
-
-        let index = 0;
-        data.forEach(movie => {
-            index += 1;
-
-            const carouselItem = document.createElement("div");
-            carouselItem.className = `carousel-item ${index === 1 ? 'active' : ''}`;
-
-            carouselItem.innerHTML = `
-                <div class="hover-zoom overflow-hidden">
-                    <img src="${movie.banner}" class="card d-block w-100 rounded open-movie-modal" alt="${movie.title}" slug="${movie.slug}">
-                </div>
-                <div class="position-relative text-center text-muted p-3" style="font-size: 18px;">
-                    ${movie.title} (${movie.year})
-                </div>
-            `;
-
-            fragment.appendChild(carouselItem);
-        });
-
-        realRewatchCombo.appendChild(fragment);
-
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-
-async function generateRewatchCarousels(allUsers, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
-    const container = document.getElementById("RewatchContainer");
-
-    // LOCK scroll position to prevent jump
-    const scrollY = window.scrollY;
-
-    // Clear previous carousels
-    container.innerHTML = "";
-
-    for (let user of allUsers) {
-        const otherUsers = allUsers.filter(u => u.username !== user.username);
-        const otherUsernames = otherUsers.map(u => u.username).join(",");
-
-        const carouselId = `carousel-${user.username}`;
-        const carouselInnerId = `${carouselId}-inner`;
-
-        // Create wrapper element and append later
-        const wrapper = document.createElement("div");
-        wrapper.className = "col-md-5 d-inline-block align-top";
-        wrapper.innerHTML = `
-            <h1 class="text-center">Rewatches for ${user.name}</h1>
-            <p class="text-center text-muted mb-3">Movies highly rated by ${user.name} that the other(s) might like!</p>
-            <div id="${carouselId}" class="carousel slide p-3" data-bs-ride="carousel">
-                <div class="carousel-inner" id="${carouselInnerId}"></div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev"></button>
-                <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next"></button>
-            </div>
-        `;
-
-        container.appendChild(wrapper);
-
-        const innerCarousel = wrapper.querySelector(`#${carouselInnerId}`);
-        await FetchRewatchlist(user.username, otherUsernames, innerCarousel, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-    }
-
-    // RESTORE scroll position
-    window.scrollTo({ top: scrollY });
-}
 
 
 
@@ -457,7 +244,6 @@ async function explainMovie(slug, title, year) {
 document.body.addEventListener("click", async function (event) {
 
     let modalTrigger = event.target.closest(".open-movie-modal");
-    let modalTrigger2 = event.target.closest(".show-movie-modal");
 
     if (event.target.matches("button[id^='explain_']")) {
         const slug = event.target.getAttribute("data-slug");
@@ -474,12 +260,6 @@ document.body.addEventListener("click", async function (event) {
         blacklistMovie(slug, title, year, weight);
 
         
-    }
-    else if (modalTrigger2) {
-
-        // call showRecommendedMovie function
-        const slug = modalTrigger2.getAttribute("slug");
-        showRecommendedMovie(slug);
     }
     else if (modalTrigger) {
 
@@ -563,129 +343,6 @@ document.body.addEventListener("click", async function (event) {
     }
 });
 
-async function showRecommendedMovie(slug) {
-
-        // Clear previous content in the container
-        document.getElementById("footer").style.visibility = "hidden";
-        document.getElementById("RecommendContainerMovie").innerHTML = "";
-
-        const all_usernames = allUsers.map(u => u.username).join(",");
-
-        const response = await fetch(`/fetch_movie_data_for_modal/${slug}/${all_usernames}`);
-        if (!response.ok) throw new Error("Something went wrong getting movie modal data");
-
-        const movie = await response.json();
-
-        // Create modal HTML
-        let modalHtml = await CreateModal2(movie);
-
-        // Strip outer modal wrapper, extract just `.card`
-        const tempWrapper = document.createElement("div");
-        tempWrapper.innerHTML = modalHtml;
-        const cardContent = tempWrapper//.querySelector(".card");
-
-        // Append only the card content to the column
-        document.getElementById("RecommendContainerMovie").appendChild(cardContent);
-
-        document.getElementById("footer").style.visibility = "visible";
-
-}
-
-// Create movie modal HTML
-async function CreateModal2(movie) {
-
-    let letterboxd_logo = "https://a.ltrbxd.com/logos/letterboxd-mac-icon.png" //"https://a.ltrbxd.com/logos/letterboxd-logo-v-neg-rgb.svg" 
-
-    // Start of user scores dynamic section
-    let userScoresHtml = `
-        <div class="row g-3 mt-1 justify-content-start flex-nowrap overflow-auto" style="white-space: nowrap;" id="userScoresRow">
-            <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
-                <h5 class="text-center mb-2 text-muted">${movie.rating}</h5>
-                <img src="${letterboxd_logo}" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-muted text-center"><small>Letterboxd</small></p>
-            </div>
-            <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
-                <h5 class="text-center mb-2 ${movie.score_combined_color}">${movie.score_combined}</h5>
-                
-                <img src="https://cdn-icons-png.flaticon.com/512/718/718339.png" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-muted text-center"><small>Combined</small></p>
-            </div>
-    `;
-
-    // Loop through all users dynamically
-    for (let i = 0; i < allUsers.length; i++) {
-        const user = allUsers[i];
-        const scoreData = movie.all_scores.find(u => u.username === user.username);  // match by username
-        console.log(scoreData);
-
-        userScoresHtml += `
-            <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
-                <h5 class="text-center mb-2 ${scoreData ? scoreData.score_color : 'text-muted'}">${scoreData ? scoreData.score : '--'}</h5>
-                <img src="${user.avatar}" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-muted text-center"><small>${user.name}</small></p>
-            </div>
-        `;
-    }
-
-    // Add combined score block at the end
-    userScoresHtml += `
-
-    </div> <!-- End of dynamic user row -->
-    `;
-
-    let modalHtml = `
-        <div class="card position-relative" style="border: none;">
-
-            <div class="banner-fade open-movie-modal" slug="${movie.slug}" style="overflow: hidden; position: relative;">
-                <img src="${movie.banner}" 
-                    class="card-img-top img-fluid" 
-                    alt="${movie.title}"
-                    style="object-fit: cover; height: 300px; object-position: top;">
-            </div>
-
-
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-lg-3">    
-                        <img src="${movie.poster}" 
-                            class="card card-img-top rounded open-movie-modal" 
-                            style="object-fit: contain;" 
-                            alt="${movie.title}"
-                            slug="${movie.slug}">
-                    </div>
-                    
-                    <div class="col-lg-9">
-                        <a href="${movie.letterboxd_link}" class="text-decoration-none edit-blacklist-link" style="font-size: 1.5em; font-weight: bolder; color: inherit;" target="_blank" rel="noopener noreferrer">${movie.title} (${movie.year})</a>
-                        <h6 class="card-subtitle mt-3 mb-2 text-muted">${movie.runtime} mins | ${movie.genres}</h6> 
-                        <p class="card-text">${movie.description}</p>
-                        <p class="card-text no-spacing text-muted"><small>Director: ${movie.director}</small></p>
-                        <p class="card-text no-spacing text-muted"><small>Cast: ${movie.actors}</small></p>
-                        <a href="${movie.trailer}" class="text-decoration-none" target="_blank" rel="noopener noreferrer"><small>Watch trailer<small></a>
-                    </div>
-                </div>
-
-                ${userScoresHtml}
-
-                <div class="row text-center mt-3">
-                <button type="button"
-                        class="btn btn-link text-muted text-decoration-none edit-blacklist-link fst-italic fs-4 explain-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#explainModal"
-                        data-slug="${movie.slug}"
-                        data-title="${movie.title}"
-                        data-year="${movie.year}"
-                        data-weight="${0}"
-                        id="explain_${movie.slug}_0_0">
-                    Why do we recommend this movie?
-                </button>
-                </div>
-                
-            </div>
-        </div>
-    `;
-    
-    return modalHtml;
-}
 
 async function CreateModal(movie) {
     let letterboxd_logo = "https://a.ltrbxd.com/logos/letterboxd-mac-icon.png";
@@ -796,32 +453,11 @@ async function CreateModal(movie) {
 
 
 
-////////////////////////////////////////// Set Display Names //////////////////////////////////////////
-function setDisplayNames(user1_name, user2_name) {
-    document.getElementById("commonWatchlistCount").textContent = '...';
-    // document.getElementById("RC-name-1").textContent = "Rewatches for " + user1_name;
-    // document.getElementById("RC-name-2").textContent = "Rewatches for " + user2_name;
-    // document.getElementById("RC-sub-1").textContent = "Movies watched by " + user1_name + " that " + user2_name + " might like!";
-    // document.getElementById("RC-sub-2").textContent = "Movies watched by " + user2_name + " that " + user1_name + " might like!";
-    // document.getElementById(`SWL1_title`).textContent = `On ${user1_name}'s`;
-    // document.getElementById(`SWL1_subtitle`).textContent = `Movies on ${user1_name}'s watchlist that ${user2_name} might like!`;
-    // document.getElementById(`SWL2_title`).textContent = `On ${user2_name}'s`;
-    // document.getElementById(`SWL2_subtitle`).textContent = `Movies on ${user2_name}'s watchlist that ${user1_name} might like!`;
-    // document.getElementById(`RC_user1_name`).textContent = `${user1_name}`;
-    // document.getElementById(`RC_user2_name`).textContent = `${user2_name}`;
-}
-
-
 
 ////////////////////////////////////////// Compare Button //////////////////////////////////////////
 document.getElementById('compareButton').addEventListener('click', async function (event) {
 
     document.getElementById("go-spinner").style.display = "block"; // Show loading spinner
-
-    
-
-    const username1 = allUsers[0].username;
-    const username2 = allUsers[1].username;
 
     const refresh = event.refresh ?? 0; // Use event.refresh if available, otherwise default to true
     if (refresh == 0) {
@@ -834,11 +470,6 @@ document.getElementById('compareButton').addEventListener('click', async functio
         await InitializeAndTrain();
     }
 
-    // Set display names
-    const user1_name = allUsers[0].name;
-    const user2_name = allUsers[1].name;
-    setDisplayNames(user1_name, user2_name);
-
     // Get filter settings
     const minRating = document.getElementById('minRating').value;
     const maxRating = document.getElementById('maxRating').value;
@@ -846,117 +477,76 @@ document.getElementById('compareButton').addEventListener('click', async functio
     const maxRuntime = document.getElementById('maxRuntime').value;
     const minYear = document.getElementById('minYear').value;
     const maxYear = document.getElementById('maxYear').value;
-
-    // Fetch content data
-    await FetchCommonWatchlist(minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-
-    // Fetch single watchlist data
-    await FetchSingleWatchlist(minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-
-    // Fetch rewatchlist data
-    await generateRewatchCarousels(allUsers, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-
-    //document.getElementById('RecommendContainerReal').classList.add('d-none');
-    // Show the content container
-
-    document.getElementById("contentContainer").classList.remove('d-none');
     
     // Get Recommendations
-    await generateRecUserButtons(refresh);
+    //await generateRecUserButtons(refresh);
+    await FetchRecommendations(getActiveUsernames(), minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
 
-    // Show the real recommendations content
-    //document.getElementById("RecommendContainerReal").classList.remove('d-none');
-    //document.getElementById("RecommendContainerReal").scrollTop = 0;
+    document.getElementById("contentContainer").classList.remove('d-none');
     document.getElementById("go-spinner").style.display = "none"; // Hide loading spinner
-
-    // Fire the event so `waitForCompareUpdate()` knows it's done
-    // const completeEvent = new Event("compareComplete");
-    // document.getElementById("compareButton").dispatchEvent(completeEvent);
-
 });
 
 function getActiveUsernames() {
-    const container = document.getElementById("userButtonsContainer");
-    const activeButtons = container.querySelectorAll("button.active");
-    return Array.from(activeButtons).map(btn => btn.getAttribute("data-user"));
+    // const container = document.getElementById("userButtonsContainer");
+    // const activeButtons = container.querySelectorAll("button.active");
+    // return Array.from(activeButtons).map(btn => btn.getAttribute("data-user"));
+    // Get all users in the allUsers array
+    const allUsersNow = allUsers.map(user => user.username);
+    return allUsersNow;
 }
 
 
-async function generateRecUserButtons(refresh) {
+// async function generateRecUserButtons(refresh) {
 
-    if (refresh == 0) {
-        console.log("Refreshing user buttons");
-        const container = document.getElementById("userButtonsContainer");
-        container.innerHTML = ""; // Clear previous buttons
+//     if (refresh == 0) {
+//         console.log("Refreshing user buttons");
+//         const container = document.getElementById("userButtonsContainer");
+//         container.innerHTML = ""; // Clear previous buttons
 
-        for (let [index, user] of allUsers.entries()) {
-            const button = document.createElement("button");
-            button.type = "button";
-            button.className = "btn btn-outline-warning";
-            button.innerText = user.name;
-            button.setAttribute("weight", 1); // Optional: for custom logic
-            button.setAttribute("data-user", user.username); // Optional: for custom logic
-            // set button active
-            button.classList.add("active");
+//         for (let [index, user] of allUsers.entries()) {
+//             const button = document.createElement("button");
+//             button.type = "button";
+//             button.className = "btn btn-outline-warning";
+//             button.innerText = user.name;
+//             button.setAttribute("weight", 1); // Optional: for custom logic
+//             button.setAttribute("data-user", user.username); // Optional: for custom logic
+//             // set button active
+//             button.classList.add("active");
 
-            // Optional: specific IDs for known users
-            button.id = `user-btn-${user}`;
+//             // Optional: specific IDs for known users
+//             button.id = `user-btn-${user}`;
 
-            // Toggle active class on click
-            button.addEventListener("click", async () => {
-                button.classList.toggle("active");
+//             // Toggle active class on click
+//             button.addEventListener("click", async () => {
+//                 button.classList.toggle("active");
             
-                const minRating = document.getElementById('minRating').value;
-                const maxRating = document.getElementById('maxRating').value;
-                const minRuntime = document.getElementById('minRuntime').value;
-                const maxRuntime = document.getElementById('maxRuntime').value;
-                const minYear = document.getElementById('minYear').value;
-                const maxYear = document.getElementById('maxYear').value;
+//                 const minRating = document.getElementById('minRating').value;
+//                 const maxRating = document.getElementById('maxRating').value;
+//                 const minRuntime = document.getElementById('minRuntime').value;
+//                 const maxRuntime = document.getElementById('maxRuntime').value;
+//                 const minYear = document.getElementById('minYear').value;
+//                 const maxYear = document.getElementById('maxYear').value;
             
-                // ✅ Await now works here
-                await FetchRecommendations(getActiveUsernames(), minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-            });
+//                 await FetchRecommendations(getActiveUsernames(), minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
+//             });
 
-            container.appendChild(button);
-        };
-    }
+//             container.appendChild(button);
+//         };
+//     }
 
-    const minRating = document.getElementById('minRating').value;
-    const maxRating = document.getElementById('maxRating').value;
-    const minRuntime = document.getElementById('minRuntime').value;
-    const maxRuntime = document.getElementById('maxRuntime').value;
-    const minYear = document.getElementById('minYear').value;
-    const maxYear = document.getElementById('maxYear').value;
+//     const minRating = document.getElementById('minRating').value;
+//     const maxRating = document.getElementById('maxRating').value;
+//     const minRuntime = document.getElementById('minRuntime').value;
+//     const maxRuntime = document.getElementById('maxRuntime').value;
+//     const minYear = document.getElementById('minYear').value;
+//     const maxYear = document.getElementById('maxYear').value;
 
-    // get all users whose buttons are active
-    const activeButtons = document.querySelectorAll("#userButtonsContainer button.active");
-    const allActiveUsers = Array.from(activeButtons).map(btn => btn.getAttribute("data-user"));
+//     // get all users whose buttons are active
+//     const activeButtons = document.querySelectorAll("#userButtonsContainer button.active");
+//     const allActiveUsers = Array.from(activeButtons).map(btn => btn.getAttribute("data-user"));
     
-    await FetchRecommendations(allActiveUsers, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-}
-
-////////////////////////////////////////// Radio Buttons //////////////////////////////////////////
-// document.querySelectorAll('input[name="btnradio"]').forEach(radio => {
-//     radio.addEventListener("change", async function () {
-
-//         const selectedRadio = document.querySelector('input[name="btnradio"]:checked');
-//         const associatedLabel = document.querySelector(`label[for="${selectedRadio.id}"]`);
-//         const weight = parseInt(associatedLabel.getAttribute("weight"), 10);
-
-//         // Get filter settings
-//         const minRating = document.getElementById('minRating').value;
-//         const maxRating = document.getElementById('maxRating').value;
-//         const minRuntime = document.getElementById('minRuntime').value;
-//         const maxRuntime = document.getElementById('maxRuntime').value;
-//         const minYear = document.getElementById('minYear').value;
-//         const maxYear = document.getElementById('maxYear').value;
-
-//         document.getElementById("RecommendContainerReal").classList.add('d-none');
-//         await FetchRecommendations(allUsers[0].username, allUsers[1].username, weight, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-//         document.getElementById("RecommendContainerReal").classList.remove('d-none');
-//         document.getElementById("RecommendContainerReal").scrollTop = 0;
-//         });
-// });
+//     await FetchRecommendations(allActiveUsers, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
+// }
 
 
 async function FetchRecommendations(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
@@ -996,10 +586,10 @@ async function FetchRecommendations(usernames, minRating, maxRating, minRuntime,
                 </div>
 
                 <div class="col">
-                    <div class="card rec-card show-movie-modal mb-3" slug="${movie.slug}">
+                    <div class="card rec-card open-movie-modal mb-3" slug="${movie.slug}">
                         <div class="row g-0" >
                             <div class="col-auto">
-                                <img src="${movie.poster}" class="rec-card-img open-movie-modal rounded-start" alt="${movie.title}" slug="${movie.slug}">
+                                <img src="${movie.poster}" class="rec-card-img rounded-start" alt="${movie.title}" slug="${movie.slug}">
                             </div>
 
                             <div class="col">
@@ -1033,10 +623,6 @@ async function FetchRecommendations(usernames, minRating, maxRating, minRuntime,
 
         // Append all movie elements to the DOM in one go
         realRecommendContent.appendChild(fragment);
-
-        // Call showRecommendedMovie function for the first movie
-        const firstMovieSlug = data[0].slug;
-        showRecommendedMovie(firstMovieSlug);
 
     } catch (error) {
         console.error(error);
