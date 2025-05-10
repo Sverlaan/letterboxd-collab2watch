@@ -41,7 +41,7 @@ recommender_instance = None
 
 @app.route('/')
 def home():
-    user_profiles.clear()  # Clear user profiles on home page load, # TODO: off only for quick testing
+    # user_profiles.clear()  # Clear user profiles on home page load, # TODO: off only for quick testing
     return render_template('index.html')
 
 
@@ -69,11 +69,11 @@ def get_user(username):
                             })
         else:
             # # TODO: Below only for quick testing
-            # user_data = user_profiles[username].to_dict()
-            # return jsonify({"current_user": user_data,
-            #                 "total_users": len(user_profiles),
-            #                 "all_users": [user_profile.to_dict() for user_profile in user_profiles.values()],
-            #                 })
+            user_data = user_profiles[username].to_dict()
+            return jsonify({"current_user": user_data,
+                            "total_users": len(user_profiles),
+                            "all_users": [user_profile.to_dict() for user_profile in user_profiles.values()],
+                            })
             # # user_profiles[username].initialize_complete = False  # Reset initialization
             raise Exception("User already exists")
 
@@ -301,4 +301,4 @@ def reset_blacklist(username):
 
 if __name__ == '__main__':
     print("Starting Flask App...")
-    app.run(debug=False)
+    app.run(debug=True)
