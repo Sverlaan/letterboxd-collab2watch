@@ -156,7 +156,7 @@ document.getElementById("editBlacklistModal").addEventListener("show.bs.modal", 
             <ul class="list-group" id="blacklistMovies-${user.username}">
                 <li class="list-group-item text-muted">Loading...</li>
             </ul>
-            <button class="btn btn-sm btn-outline-danger mt-2 reset-blacklist" data-username="${user.username}">Reset Blacklist</button>
+            <button class="btn btn-sm btn-danger mt-2 reset-blacklist" data-username="${user.username}">Reset Blacklist</button>
         `;
         contentContainer.appendChild(contentPane);
     });

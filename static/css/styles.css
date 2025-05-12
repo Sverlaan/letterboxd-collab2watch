@@ -1,14 +1,33 @@
 
+
+/* Hide scrollbar but allow scrolling */
+.left-scrollable {
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.left-scrollable::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+
+
+
+
 /* Custom card for user cards */
 .user-card {
-    border-radius: 1.3rem; /* Larger border radius */
+    border-radius: 1.3rem;
     transition: transform 0.3s ease;
+    position: relative; /* Needed for z-index to work */
+    z-index: 1; /* Default layer */
 }
 
 .user-card:hover {
-    transform: scale(1.05); /* Slight enlargement */
-    /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);  Optional: subtle shadow */
+    transform: scale(1.05);
+    z-index: 10; /* Bring to front */
 }
+
 
 
 

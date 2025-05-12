@@ -11,133 +11,225 @@
 </head>
   <body>
 
-    <!-- Navbar -->
-    <!-- <nav class="navbar navbar-expand-lg bg-secondary-subtle">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('home') }}">collab2watch.com</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">HOME</a>
-                    <a class="nav-link" href="{{ url_for('how_it_works') }}">HOW IT WORKS</a>
-                    <a class="nav-link" href="{{ url_for('credits') }}">CREDITS</a>
-                </div>
-            </div>
-
-        </div>
-    </nav> -->
+    <div class="container-fluid" style="height: 100vh; overflow: hidden;">
+        <div class="row h-100">
     
+            <div class="col-md-3 bg-secondary-subtle left-scrollable" style="overflow-y: auto; height: 100%;">
 
-    <div class="container-fluid bg-secondary-subtle p-5">
+                <h1 class="text-center mt-5">Collab2Watch</h1>
 
-        <!-- Website header -->
-        <h1 class="text-center mt-3">Letterboxd Group Recommendation</h1>
-
-        <div class="d-flex flex-column align-items-center text-center gap-4 mt-5">
-
-            <!-- Top: Username Form -->
-            <form class="d-flex justify-content-center align-items-center gap-2 mb-3" id="usernameForm">
-                <p id="enterUsernameHeader" style="font-size: 14pt" class="mb-0 text-muted">Add Letterboxd user: </p>
-                <input type="text" class="form-control"
-                id="inputUsername"
-                placeholder="Username"
-                autocomplete="off"
-                style="width: 200px; font-size: 14pt;">
-                <button type="submit"
-                class="btn btn-secondary"
-                style="font-size: 14pt"
-                id="submitButton">
-                Add
-                </button>
-            </form>
-        </div>
-
-        <!-- User cards -->
-        <div class = "row mb-3 justify-content-center align-items-top">
-            <div class="container mt-4">
-                <div class="row align-items-top justify-content-center" id="userRow">
-                    <!-- User cards will be appended here -->
+                <div class="d-flex flex-column align-items-center text-center gap-4">
+        
+                    <!-- Bottom: Buttons -->
+                    <div class="d-flex justify-content-center align-items-center gap-2" style="width: 380pt;">
+                        <button type="button"
+                            class="btn btn-warning"
+                            id="compareButton"
+                            style="font-size: 18pt"
+                            disabled>
+                            Go!
+                        </button>
+        
+                        <!-- Dark/Light Mode Toggle Button -->
+                        <button class="btn btn-outline-secondary" style="width: 50pt; font-size: 18pt" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
+                            <i class="bi bi-moon-stars" id="theme-icon"> </i>
+                        </button>
+        
+                        <div id="go-spinner" class="spinner-border text-secondary" style="display:none; width: 40px; height: 40px;"></div>
+                    </div>
+        
                 </div>
-            </div>
-        </div>
 
-        <div class="d-flex flex-column align-items-center text-center gap-4">
-
-            <!-- Bottom: Buttons -->
-            <div class="d-flex justify-content-center align-items-center gap-2" style="width: 380pt;">
-                <button type="button"
-                    class="btn btn-warning"
-                    id="compareButton"
-                    style="width: 180pt; font-size: 18pt"
-                    disabled>
-                    Go!
-                </button>
-
-                <button type="button"
-                    class="btn btn-outline-warning"
-                    id="filterButton"
-                    style="width: 50pt; font-size: 18pt"
-                    data-bs-toggle="modal"
-                    data-bs-target="#filtersModal">
-                    <i class="bi bi-funnel"></i>
-                </button>
-
-                <!-- Dark/Light Mode Toggle Button -->
-                <button class="btn btn-outline-secondary" style="width: 50pt; font-size: 18pt" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
-                    <i class="bi bi-moon-stars" id="theme-icon"> </i>
-                </button>
-
-                <div id="go-spinner" class="spinner-border text-secondary" style="display:none; width: 40px; height: 40px;"></div>
-            </div>
-
-        </div>
+                <div class="d-flex flex-column align-items-center text-center gap-4 mt-5">
+            
+                    <!-- Top: Username Form -->
+                    <form class="d-flex justify-content-center align-items-center gap-2 mb-2" id="usernameForm">
+                        <p id="enterUsernameHeader" style="font-size: 14pt" class="mb-0 text-muted">Add Letterboxd user: </p>
+                        <input type="text" class="form-control"
+                        id="inputUsername"
+                        placeholder="Username"
+                        autocomplete="off"
+                        style="width: 200px; font-size: 14pt;">
+                        <button type="submit"
+                        class="btn btn-secondary"
+                        style="font-size: 14pt"
+                        id="submitButton">
+                        Add
+                        </button>
+                    </form>
+                </div>
         
-        
-
-    </div>
-
-
-
-    <!-- Parent container for all the content -->
-    <div class="container-fluid d-none" id="contentContainer">     
-
-        <div class="container mt-5 mb-5 p-3" id="RecommendContainer">
-
-            <div class="row justify-content-center align-items-top g-0 mb-5">
-                <h1 class="text-center">Recommendations</h1>
-                <p class="text-center text-muted no-spacing">Combined and personalized recommendations for movies you have not seen!</p>
-                <p class="text-center text-muted mb-3">Use the blacklist functionality to dismiss any suggestions and tune the recommendations.</p>
-
-
-            </div>
-
-
-
-            <div class="row justify-content-center align-items-top g-5" style="min-height: 750px;">
-
-                <div class="col-md-8 hover-zoom-rec-card ">
-                    <!-- Flexbox wrapper to control alignment -->
-                    <div class="row justify-content-center align-items-center mb-4">
-                        <div class="col-auto">
-                            <div class="btn-group d-flex gap-1" role="group" aria-label="Toggle button group" id="userButtonsContainer">
-                            </div><!-- Buttons will be inserted here -->
-                        </div>
-                        <div class="col-auto">
-                            <a href="#" id="editBlacklistButton" class="text-danger text-decoration-none edit-blacklist-link" data-bs-toggle="modal" data-bs-target="#editBlacklistModal">  Edit Blacklist</a>
+                <!-- User cards -->
+                <div class = "row mb-2 justify-content-center align-items-top">
+                    <div class="container p-4">
+                        <div class="row align-items-top justify-content-center" id="userRow">
+                            <!-- User cards will be appended here -->
                         </div>
                     </div>
-                    <div class="row justify-content-center align-items-top g-0 overflow-auto" id="RecommendContainerReal" 
-                        style="height: 600px;">   <!-- Should be max height for scrollbar!!!!! -->
+                    <div class="text-center">
+                        <a href="#" id="editBlacklistButton" class="text-danger text-decoration-none edit-blacklist-link" data-bs-toggle="modal" data-bs-target="#editBlacklistModal"> Edit Blacklists</a>
                     </div>
                 </div>
+        
+                <!--divider-->
+                <hr class="my-4 w-75 mx-auto">
+
+
+                <div class="container">
+
+                    <h5 class="text-center">Filters</h5>
+
+                    <div class="container px-5 pb-3">
+                        <form id="filtersForm">
+
+                            <div class="mb-3">
+                                <label class="form-label">Rating</label>
+                                <div class="position-relative">
+                                    <!-- Range Track (Behind the sliders) -->
+                                    <div id="rangeTrack" class="range-track"></div>
+
+                                    <!-- Lower Bound Slider -->
+                                    <input type="range" class="form-range range-input" min="0" max="5" step="0.5" id="minRating" value="0"">
+
+                                    <!-- Labels for Each Step -->
+                                    <div class="d-flex justify-content-between">
+                                        <span>0</span>
+                                        <span>1</span>
+                                        <span>2</span>
+                                        <span>3</span>
+                                        <span>4</span>
+                                        <span>5</span>
+                                    </div>
+
+                                    <!-- Upper Bound Slider -->
+                                    <input type="range" class="form-range range-input" min="0" max="5" step="0.5" id="maxRating" value="5"">
+                                </div>
+                            </div>
+                        
+                            <div class="mb-3 row justify-content-left align-items-center"> 
+                                <div class="col-md-5">
+                                    <label class="form-label">Release Year</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" id="minYear" min="1870" max="2030" value="1870">
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label">-</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" id="maxYear" min="1870" max="2030" value="2025">
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row justify-content-left align-items-center"> 
+                                <div class="col-md-5">
+                                    <label class="form-label">Runtime</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control"  id="minRuntime" min="0" max="9999" value="0">
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label">-</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control"  id="maxRuntime" min="0" max="9999" value="9999">
+                                </div>
+                            </div>
+                        </form>
+                        <div class="text-center d-flex gap-2">
+                            <button type="button" class="btn btn-secondary w-50" id="resetFilters">Reset</button>
+                            <button type="button" class="btn btn-warning w-50" data-bs-dismiss="modal" id="applyFilters">Apply</button>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!--divider-->
+                <hr class="my-4 w-75 mx-auto">
+
+                <!-- Footer -->
+                <footer class="text-center bg-secondary-subtle text-lg-start p-3 mb-5" id="footer">
+
+                    <h5 class="text-center">Credits</h5>
+
+                    <div class="text-center text-muted">
+                        <p>© 2025 Stianne. Check out the source code on <a href="https://github.com/Sverlaan/collab2watch.git" target="_blank">GitHub</a>.</p>
+                        <p>This product uses the TMDB API but is not endorsed or certified by TMDB. This is also not an official Letterboxd product.</p>
+
+                        <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+                            <a href="https://www.themoviedb.org/" target="_blank">
+                                <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" 
+                                    alt="The Movie Database Logo" 
+                                    class="img-fluid" 
+                                    style="height: 20px;">
+                            </a>
+                            <a href="https://letterboxd.com/" target="_blank">
+                                <img src="https://a.ltrbxd.com/logos/letterboxd-logo-h-pos-rgb.svg" 
+                                    alt="Letterboxd Logo" 
+                                    class="img-fluid" 
+                                    style="height: 50px;">
+                            </a>
+                        </div>
+                    </div>
+                </footer>
+                
+                
             </div>
 
-        </div>
+
+
+
+            <div class="col-md-9" style="overflow-y: auto; height: 100%;">
+
+            
+                <!-- Parent container for all the content -->
+                <div class="container-fluid d-none" id="contentContainer">     
+            
+                    <div class="container mt-5 mb-5 p-3" id="RecommendContainer">
+            
+                        <div class="row justify-content-center align-items-top g-0 mb-5">
+                            <h1 class="text-center">Recommendations</h1>
+                            <p class="text-center text-muted no-spacing">Combined and personalized recommendations for movies you have not seen!</p>
+                            <p class="text-center text-muted mb-3">Use the blacklist functionality to dismiss any suggestions and tune the recommendations.</p>
+            
+            
+                        </div>
+            
+            
+            
+                        <div class="row justify-content-center align-items-top g-5" style="min-height: 750px;">
+            
+                            <div class="col-md-8 hover-zoom-rec-card ">
+                                <!-- Flexbox wrapper to control alignment -->
+                                <div class="row justify-content-center align-items-center mb-4">
+                                    <div class="col-auto">
+                                        <div class="btn-group d-flex gap-1" role="group" aria-label="Toggle button group" id="userButtonsContainer">
+                                        </div><!-- Buttons will be inserted here -->
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center align-items-top g-0 overflow-auto" id="RecommendContainerReal" 
+                                    style="height: 600px;">   <!-- Should be max height for scrollbar!!!!! -->
+                                </div>
+                            </div>
+                        </div>
+            
+                    </div>
+            
+            
+                </div>
+            
+            
+
+
+
+
+            </div>
+
+
 
 
     </div>
+    
 
 
 
@@ -244,154 +336,6 @@
     </div>
 
 
-
-
-
-
-
-    <!-- Filters Modal -->
-    <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-top">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="filtersModalLabel">Filters</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="filtersForm">
-
-                        <div class="mb-3">
-                            <label class="form-label">Rating</label>
-                            <div class="position-relative">
-                                <!-- Range Track (Behind the sliders) -->
-                                <div id="rangeTrack" class="range-track"></div>
-
-                                <!-- Lower Bound Slider -->
-                                <input type="range" class="form-range range-input" min="0" max="5" step="0.5" id="minRating" value="0"">
-
-                                <!-- Labels for Each Step -->
-                                <div class="d-flex justify-content-between">
-                                    <span>0</span>
-                                    <span>1</span>
-                                    <span>2</span>
-                                    <span>3</span>
-                                    <span>4</span>
-                                    <span>5</span>
-                                </div>
-
-                                <!-- Upper Bound Slider -->
-                                <input type="range" class="form-range range-input" min="0" max="5" step="0.5" id="maxRating" value="5"">
-                            </div>
-                        </div>
-                    
-                        <div class="mb-3 row justify-content-left align-items-center"> 
-                            <div class="col-md-3">
-                                <label class="form-label">Release Year</label>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="number" class="form-control" id="minYear" min="1870" max="2030" value="1870">
-                            </div>
-                            <div class="col-md-1">
-                                 <label class="form-label">-</label>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="number" class="form-control" id="maxYear" min="1870" max="2030" value="2025">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row justify-content-left align-items-center"> 
-                            <div class="col-md-3">
-                                <label class="form-label">Runtime</label>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="number" class="form-control"  id="minRuntime" min="0" max="9999" value="0">
-                            </div>
-                            <div class="col-md-1">
-                                 <label class="form-label">-</label>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="number" class="form-control"  id="maxRuntime" min="0" max="9999" value="9999">
-                            </div>
-                        </div>
-
-                        <!-- <div class="mb-3 row justify-content-left align-items-top"> 
-                            <div class="col-md-3">
-                                <label class="form-label">Genres</label>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        checkbox
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        checkbox
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-1">
-                                 <label class="form-label"></label>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        checkbox
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        checkbox
-                                    </label>
-                                </div>
-                            </div>
-                            
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="genres" class="form-label">Genres</label>
-                            <input type="text" class="form-control" id="genres" placeholder="Comedy, Drama, Action">
-                        </div> -->
-                        
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" id="resetFilters">Reset</button>
-                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" id="applyFilters">Apply</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="text-center bg-secondary-subtle text-lg-start p-5" id="footer">
-        <div class="text-center text-muted">
-            <p>© 2025 Stianne. Check out the source code on <a href="https://github.com/Sverlaan/collab2watch.git" target="_blank">GitHub</a>.</p>
-            <p>This product uses the TMDB API but is NOT endorsed or certified by TMDB. This is also NOT an official Letterboxd product.</p>
-
-            <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
-                <a href="https://www.themoviedb.org/" target="_blank">
-                    <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" 
-                        alt="The Movie Database Logo" 
-                        class="img-fluid" 
-                        style="height: 20px;">
-                </a>
-                <a href="https://letterboxd.com/" target="_blank">
-                    <img src="https://a.ltrbxd.com/logos/letterboxd-logo-h-pos-rgb.svg" 
-                        alt="Letterboxd Logo" 
-                        class="img-fluid" 
-                        style="height: 50px;">
-                </a>
-            </div>
-        </div>
-    </footer>
 
 
 

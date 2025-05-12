@@ -19,9 +19,6 @@ document.getElementById('applyFilters').addEventListener('click', async function
     }
 });
 
-
-
-
 // Listen for the form submit event
 document.getElementById('usernameForm').addEventListener('submit', function (event) {
     event.preventDefault();
@@ -40,76 +37,19 @@ let num_users_total = 0;
 ////////////////////////////////////////// Fetch User Data //////////////////////////////////////////
 async function fetchUserData(username) {
     try {
-        // Fetch the initial user info
         const response = await fetch(`/get_user/${username}`);
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
         const current_user = data.current_user;
-        
-        document.getElementById('compareButton').disabled = true;
 
+        document.getElementById('compareButton').disabled = true;
         allUsers = data.all_users;
-        console.log(allUsers);
         num_users_total = data.total_users;
 
-        // Create a new column with the basic info and a loading spinner inside
-        const col = document.createElement("div");
-        col.className = "col-md-3 mb-4";
-        col.id = `user-${username}`;
-        col.innerHTML = `
-            <div class="card user-card text-center h-100 d-flex flex-column justify-content-between position-relative">
-                <button 
-                    type="button"
-                    class="btn-close position-absolute top-0 end-0 m-2 close-btn user-close-btn" 
-                    aria-label="Close"
-                    data-username="${username}">
-                </button>
-                <div>
-                    <img src="${current_user.avatar}" class="img-fluid rounded-circle mt-3 mx-auto" style="width: 100px; height: 100px;" alt="${current_user.name}'s avatar">
-                    <div class="card-body">
-                        <h5 class="card-title">${current_user.name}</h5>
-                        <p id="user-stats-${username}" class="card-text text-muted">Fetching user data...</p>
-                        <a href="${current_user.url}" target="_blank" class="btn btn-outline-primary btn-sm">View Profile</a>
-                    </div>
-                </div>
-                <div class="pb-3">
-                    <div class="spinner-border text-secondary" role="status" id="spinner-${username}">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.getElementById("userRow").appendChild(col);
+        // Create and insert user card
+        createUserCard(username, current_user);
 
-        // Add event listener for the close button
-        col.querySelector('.close-btn').addEventListener('click', (e) => {
-            const usernameToRemove = e.target.getAttribute('data-username');
-            // Call your custom logic here
-            console.log(`Close button clicked for user: ${usernameToRemove}`);
-
-            // Example: Remove the card
-            const cardToRemove = document.getElementById(`user-${usernameToRemove}`);
-            if (cardToRemove) {
-                cardToRemove.remove();
-                // Delete user from allUsers
-                allUsers = allUsers.filter(user => user.username !== usernameToRemove);
-                console.log(`User ${usernameToRemove} removed from allUsers.`);
-                // Update the number of users done
-                num_users_done -= 1;
-                // Enable the compare button if no users are left
-                if (num_users_done <= 1) {
-                    document.getElementById('compareButton').disabled = true;
-                }
-                else {
-                    // press the compare button to update the recommendations
-                    const event = new Event('click', { bubbles: true });
-                    event.refresh = 0;
-                    document.getElementById('compareButton').dispatchEvent(event);
-                }
-            }
-        });
-
-        // Now fetch the more in-depth user data, such as watchlist and ratings
+        // Fetch extended user data
         const response2 = await fetch(`/get_user_data/${username}`);
         if (!response2.ok) throw new Error("Could not fetch user data");
         const data2 = await response2.json();
@@ -117,27 +57,89 @@ async function fetchUserData(username) {
 
         // Update stats text
         const statsEl = document.getElementById(`user-stats-${username}`);
-        // statsEl.style.whiteSpace = "pre-line";
         statsEl.textContent = `Watched: ${current_user.num_movies_watched} | Watchlist: ${current_user.watchlist_length}`;
 
-        // Remove spinner
+        // Swap spinner for close button
         const spinner = document.getElementById(`spinner-${username}`);
-        if (spinner) spinner.remove();
+        const closeBtn = document.getElementById(`close-btn-${username}`);
+        if (spinner) spinner.classList.add('d-none');
+        if (closeBtn) closeBtn.classList.remove('d-none');
 
-        // Mark this user as done and check whether any other is still loading
         num_users_done += 1;
-        if (num_users_total > 1) {
-            if (num_users_done === num_users_total) {
-                document.getElementById('compareButton').disabled = false;
-            }
+        if (num_users_total > 1 && num_users_done === num_users_total) {
+            document.getElementById('compareButton').disabled = false;
         }
 
     } catch (error) {
-        // TODO: Handle not found and max exceeded separately
         console.error(error);
         document.getElementById("enterUsernameHeader").textContent = "User not found. Try Again:";
     }
 }
+
+function createUserCard(username, user) {
+    const col = document.createElement("div");
+    col.className = "mb-2 d-flex justify-content-center";
+    col.id = `user-${username}`;
+    col.innerHTML = `
+        <div class="card user-card w-100 p-3" style="max-width: 700px; position: relative;">
+            <div class="d-flex align-items-center justify-content-between">
+                
+                <!-- Left: Avatar and Text -->
+                <div class="d-flex align-items-center">
+                    <img src="${user.avatar}" class="rounded-circle me-3" 
+                         style="width: 80px; height: 80px; object-fit: cover;" 
+                         alt="${user.name}'s avatar">
+                    <div>
+                        <h5 class="mb-1 text-start">
+                            <a href="${user.url}" target="_blank" class="text-decoration-none">${user.name}</a>
+                        </h5>
+                        <p id="user-stats-${username}" class="mb-1 text-muted text-start">Fetching user data...</p>
+                    </div>
+                </div>
+
+                <!-- Right: Spinner or Close Button -->
+                <div class="d-flex align-items-center justify-content-end">
+                    <div id="spinner-${username}">
+                        <div class="spinner-border text-secondary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <button 
+                        type="button"
+                        class="btn-close ms-3 d-none" 
+                        aria-label="Close"
+                        data-username="${username}"
+                        id="close-btn-${username}">
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById("userRow").appendChild(col);
+
+    // Add close button listener (will be revealed after loading)
+    const closeBtn = col.querySelector(`#close-btn-${username}`);
+    if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+            const usernameToRemove = e.target.getAttribute('data-username');
+            const cardToRemove = document.getElementById(`user-${usernameToRemove}`);
+            if (cardToRemove) {
+                cardToRemove.remove();
+                allUsers = allUsers.filter(user => user.username !== usernameToRemove);
+                num_users_done -= 1;
+
+                if (num_users_done <= 1) {
+                    document.getElementById('compareButton').disabled = true;
+                } else {
+                    const event = new Event('click', { bubbles: true });
+                    event.refresh = 0;
+                    document.getElementById('compareButton').dispatchEvent(event);
+                }
+            }
+        });
+    }
+}
+
 
 
 async function InitializeAndTrain() {
@@ -155,14 +157,6 @@ async function InitializeAndTrain() {
         console.error(error);
     }
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -200,38 +194,6 @@ async function explainMovie(slug, title, year) {
     modal.show();
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -453,106 +415,47 @@ async function CreateModal(movie) {
 
 
 
-
-////////////////////////////////////////// Compare Button //////////////////////////////////////////
-document.getElementById('compareButton').addEventListener('click', async function (event) {
-
-    document.getElementById("go-spinner").style.display = "block"; // Show loading spinner
-
-    const refresh = event.refresh ?? 0; // Use event.refresh if available, otherwise default to true
-    if (refresh == 0) {
-        document.getElementById("contentContainer").classList.add('d-none');
-        await InitializeAndTrain();
-    }
-    else if (refresh == 1){
-        // Show the content container
-        console.log("WAS HERE 1");
-        await InitializeAndTrain();
-    }
-
-    // Get filter settings
+function GetFilterSettings() {
     const minRating = document.getElementById('minRating').value;
     const maxRating = document.getElementById('maxRating').value;
     const minRuntime = document.getElementById('minRuntime').value;
     const maxRuntime = document.getElementById('maxRuntime').value;
     const minYear = document.getElementById('minYear').value;
     const maxYear = document.getElementById('maxYear').value;
+
+    return { minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear };
+}
+
+
+
+
+async function Recommend() {
+
+    document.getElementById("go-spinner").style.display = "block"; // Show loading spinner
+    //document.getElementById("contentContainer").classList.add('d-none');
+
+    await InitializeAndTrain();
+
+    // Get filter settings
+    const { minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear } = GetFilterSettings();
+    const activeUsernames = getActiveUsernames();
     
     // Get Recommendations
-    //await generateRecUserButtons(refresh);
-    await FetchRecommendations(getActiveUsernames(), minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
+    await FetchAndCreateRecommendationCards(activeUsernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
 
     document.getElementById("contentContainer").classList.remove('d-none');
     document.getElementById("go-spinner").style.display = "none"; // Hide loading spinner
-});
+
+}
 
 function getActiveUsernames() {
-    // const container = document.getElementById("userButtonsContainer");
-    // const activeButtons = container.querySelectorAll("button.active");
-    // return Array.from(activeButtons).map(btn => btn.getAttribute("data-user"));
-    // Get all users in the allUsers array
     const allUsersNow = allUsers.map(user => user.username);
     return allUsersNow;
 }
 
 
-// async function generateRecUserButtons(refresh) {
-
-//     if (refresh == 0) {
-//         console.log("Refreshing user buttons");
-//         const container = document.getElementById("userButtonsContainer");
-//         container.innerHTML = ""; // Clear previous buttons
-
-//         for (let [index, user] of allUsers.entries()) {
-//             const button = document.createElement("button");
-//             button.type = "button";
-//             button.className = "btn btn-outline-warning";
-//             button.innerText = user.name;
-//             button.setAttribute("weight", 1); // Optional: for custom logic
-//             button.setAttribute("data-user", user.username); // Optional: for custom logic
-//             // set button active
-//             button.classList.add("active");
-
-//             // Optional: specific IDs for known users
-//             button.id = `user-btn-${user}`;
-
-//             // Toggle active class on click
-//             button.addEventListener("click", async () => {
-//                 button.classList.toggle("active");
-            
-//                 const minRating = document.getElementById('minRating').value;
-//                 const maxRating = document.getElementById('maxRating').value;
-//                 const minRuntime = document.getElementById('minRuntime').value;
-//                 const maxRuntime = document.getElementById('maxRuntime').value;
-//                 const minYear = document.getElementById('minYear').value;
-//                 const maxYear = document.getElementById('maxYear').value;
-            
-//                 await FetchRecommendations(getActiveUsernames(), minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-//             });
-
-//             container.appendChild(button);
-//         };
-//     }
-
-//     const minRating = document.getElementById('minRating').value;
-//     const maxRating = document.getElementById('maxRating').value;
-//     const minRuntime = document.getElementById('minRuntime').value;
-//     const maxRuntime = document.getElementById('maxRuntime').value;
-//     const minYear = document.getElementById('minYear').value;
-//     const maxYear = document.getElementById('maxYear').value;
-
-//     // get all users whose buttons are active
-//     const activeButtons = document.querySelectorAll("#userButtonsContainer button.active");
-//     const allActiveUsers = Array.from(activeButtons).map(btn => btn.getAttribute("data-user"));
-    
-//     await FetchRecommendations(allActiveUsers, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
-// }
-
-
-async function FetchRecommendations(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
+async function FetchAndCreateRecommendationCards(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
     try {
-
-        
 
         if (usernames.length === 0) {
             console.error("No users selected for recommendations.");
@@ -628,4 +531,10 @@ async function FetchRecommendations(usernames, minRating, maxRating, minRuntime,
         console.error(error);
     }
 }
+
+
+////////////////////////////////////////// Compare Button //////////////////////////////////////////
+document.getElementById('compareButton').addEventListener('click', async function (event) {
+    await Recommend();
+});
 
