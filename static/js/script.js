@@ -1,5 +1,5 @@
 ////////////////////////////////////////// Filter and Settings //////////////////////////////////////////
-document.getElementById('resetFilters').addEventListener('click', function (event) {
+document.getElementById('resetFilters').addEventListener('click', async function (event) {
 
     document.getElementById('minRating').value = 0;
     document.getElementById('maxRating').value = 5;
@@ -7,16 +7,13 @@ document.getElementById('resetFilters').addEventListener('click', function (even
     document.getElementById('maxRuntime').value = 9999;
     document.getElementById('minYear').value = 1870;
     document.getElementById('maxYear').value = 2025;
+
+    await Recommend();
 });
 
 document.getElementById('applyFilters').addEventListener('click', async function (event) {
 
-    const compareButton = document.getElementById('compareButton');
-    if (!compareButton.disabled) {
-        const event = new Event('click', { bubbles: true });
-        event.refresh = -1;
-        compareButton.dispatchEvent(event);
-    }
+    await Recommend();
 });
 
 // Listen for the form submit event
@@ -28,11 +25,10 @@ document.getElementById('usernameForm').addEventListener('submit', function (eve
     document.getElementById('inputUsername').value = "";
 });
 
+
+
 // global list of all users
 let allUsers = [];
-// To track whether all users have been fetched
-let num_users_done = 0;
-let num_users_total = 0;
 
 ////////////////////////////////////////// Fetch User Data //////////////////////////////////////////
 async function fetchUserData(username) {
@@ -40,14 +36,9 @@ async function fetchUserData(username) {
         const response = await fetch(`/get_user/${username}`);
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
-        const current_user = data.current_user;
-
-        document.getElementById('compareButton').disabled = true;
-        allUsers = data.all_users;
-        num_users_total = data.total_users;
 
         // Create and insert user card
-        createUserCard(username, current_user);
+        createUserCard(username, data);
 
         // Fetch extended user data
         const response2 = await fetch(`/get_user_data/${username}`);
@@ -57,7 +48,7 @@ async function fetchUserData(username) {
 
         // Update stats text
         const statsEl = document.getElementById(`user-stats-${username}`);
-        statsEl.textContent = `Watched: ${current_user.num_movies_watched} | Watchlist: ${current_user.watchlist_length}`;
+        statsEl.textContent = `Watched: ${data.num_movies_watched} | Watchlist: ${data.watchlist_length}`;
 
         // Swap spinner for close button
         const spinner = document.getElementById(`spinner-${username}`);
@@ -65,10 +56,10 @@ async function fetchUserData(username) {
         if (spinner) spinner.classList.add('d-none');
         if (closeBtn) closeBtn.classList.remove('d-none');
 
-        num_users_done += 1;
-        if (num_users_total > 1 && num_users_done === num_users_total) {
-            document.getElementById('compareButton').disabled = false;
-        }
+        // Add user object to allUsers list
+        allUsers.push(data);
+
+        await Recommend();
 
     } catch (error) {
         console.error(error);
@@ -120,20 +111,18 @@ function createUserCard(username, user) {
     // Add close button listener (will be revealed after loading)
     const closeBtn = col.querySelector(`#close-btn-${username}`);
     if (closeBtn) {
-        closeBtn.addEventListener('click', (e) => {
+        closeBtn.addEventListener('click', async (e) => {
             const usernameToRemove = e.target.getAttribute('data-username');
             const cardToRemove = document.getElementById(`user-${usernameToRemove}`);
             if (cardToRemove) {
                 cardToRemove.remove();
                 allUsers = allUsers.filter(user => user.username !== usernameToRemove);
-                num_users_done -= 1;
 
-                if (num_users_done <= 1) {
-                    document.getElementById('compareButton').disabled = true;
-                } else {
-                    const event = new Event('click', { bubbles: true });
-                    event.refresh = 0;
-                    document.getElementById('compareButton').dispatchEvent(event);
+                if (allUsers.length > 0) {
+                    await Recommend();
+                }
+                else {
+                    document.getElementById("contentContainer").classList.add('d-none');
                 }
             }
         });
@@ -434,6 +423,8 @@ async function Recommend() {
     document.getElementById("go-spinner").style.display = "block"; // Show loading spinner
     //document.getElementById("contentContainer").classList.add('d-none');
 
+    console.log("Get recs for active usernames: " + allUsers.map(user => user.username));
+
     await InitializeAndTrain();
 
     // Get filter settings
@@ -455,6 +446,54 @@ function getActiveUsernames() {
 
 
 async function FetchAndCreateRecommendationCards(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
+    try {
+
+        if (usernames.length === 0) {
+            console.error("No users selected for recommendations.");
+            const realRecommendContent = document.getElementById("RecommendedCardsContainer");
+            realRecommendContent.innerHTML = "";  // Clear content efficiently
+            return;
+        }
+
+        // You can join them with commas (or however your backend expects)
+        const response = await fetch(`/fetch_recommendations/${usernames.join(",")}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
+        if (!response.ok) throw new Error("Something went wrong getting recommendations");
+        const data = await response.json();
+
+        const realRecommendContent = document.getElementById("RecommendedCardsContainer");
+        realRecommendContent.innerHTML = "";  // Clear content efficiently
+
+        const fragment = document.createDocumentFragment(); // Create a Document Fragment
+
+        let index = 0;
+        data.forEach(movie => {
+            index += 1;
+
+            // Generate each card
+            const card = document.createElement("div");
+            card.classList.add("col");
+            card.innerHTML = `
+                <div class="h-100">
+                    <img src="${movie.poster}" 
+                        class="card card-img-top rounded open-movie-modal" 
+                        alt="${movie.title}"
+                        slug="${movie.slug}">
+                </div>
+            `;
+
+            fragment.appendChild(card);
+        });
+
+        // Append all movie elements to the DOM in one go
+        realRecommendContent.appendChild(fragment);
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+async function FetchAndCreateRecommendationCardsOLD(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
     try {
 
         if (usernames.length === 0) {
@@ -533,8 +572,4 @@ async function FetchAndCreateRecommendationCards(usernames, minRating, maxRating
 }
 
 
-////////////////////////////////////////// Compare Button //////////////////////////////////////////
-document.getElementById('compareButton').addEventListener('click', async function (event) {
-    await Recommend();
-});
 

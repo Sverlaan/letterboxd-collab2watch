@@ -57,28 +57,22 @@ def credits():
 
 @app.route('/get_user/<string:username>', methods=['GET'])
 def get_user(username):
-    try:
-        start = timer()
-        if username not in user_profiles and len(user_profiles) < 8:
-            profile = UserProfile(username)
-            user_profiles[username] = profile
-            user_data = profile.to_dict()
-            return jsonify({"current_user": user_data,
-                            "total_users": len(user_profiles),
-                            "all_users": [user_profile.to_dict() for user_profile in user_profiles.values()],
-                            })
-        else:
-            # # TODO: Below only for quick testing
-            user_data = user_profiles[username].to_dict()
-            return jsonify({"current_user": user_data,
-                            "total_users": len(user_profiles),
-                            "all_users": [user_profile.to_dict() for user_profile in user_profiles.values()],
-                            })
-            # # user_profiles[username].initialize_complete = False  # Reset initialization
-            raise Exception("User already exists")
+    # try:
+    start = timer()
+    if username not in user_profiles and len(user_profiles) < 8:
+        profile = UserProfile(username)
+        user_profiles[username] = profile
+        user_data = profile.to_dict()
+        return jsonify(user_data)
+    else:
+        # # TODO: Below only for quick testing
+        user_data = user_profiles[username].to_dict()
+        return jsonify(user_data)
+        # # user_profiles[username].initialize_complete = False  # Reset initialization
+        raise Exception("User already exists")
 
-    except:
-        return jsonify({"error": "User not found"}), 404
+    # except:
+    #     return jsonify({"error": "User not found"}), 404
 
 
 @app.route('/get_user_data/<string:username>', methods=['GET'])

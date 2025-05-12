@@ -22,13 +22,6 @@
         
                     <!-- Bottom: Buttons -->
                     <div class="d-flex justify-content-center align-items-center gap-2" style="width: 380pt;">
-                        <button type="button"
-                            class="btn btn-warning"
-                            id="compareButton"
-                            style="font-size: 18pt"
-                            disabled>
-                            Go!
-                        </button>
         
                         <!-- Dark/Light Mode Toggle Button -->
                         <button class="btn btn-outline-secondary" style="width: 50pt; font-size: 18pt" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
@@ -67,7 +60,7 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <a href="#" id="editBlacklistButton" class="text-danger text-decoration-none edit-blacklist-link" data-bs-toggle="modal" data-bs-target="#editBlacklistModal"> Edit Blacklists</a>
+                        <a href="#" id="editBlacklistButton" class="text-danger text-decoration-none edit-blacklist-link" data-bs-toggle="modal" data-bs-target="#editBlacklistModal"> Edit Blacklist</a>
                     </div>
                 </div>
         
@@ -181,48 +174,25 @@
 
             <div class="col-md-9" style="overflow-y: auto; height: 100%;">
 
+                
             
                 <!-- Parent container for all the content -->
-                <div class="container-fluid d-none" id="contentContainer">     
+                <div class="container-fluid d-none w-75" id="contentContainer">    
+                    
+                    <h1 class="text-center" style="margin-top: 7rem;">Recommendations</h1>
             
-                    <div class="container mt-5 mb-5 p-3" id="RecommendContainer">
+                    <div class="container px-5 mb-5 mt-3" id="RecommendContainer">
             
                         <div class="row justify-content-center align-items-top g-0 mb-5">
-                            <h1 class="text-center">Recommendations</h1>
                             <p class="text-center text-muted no-spacing">Combined and personalized recommendations for movies you have not seen!</p>
                             <p class="text-center text-muted mb-3">Use the blacklist functionality to dismiss any suggestions and tune the recommendations.</p>
-            
-            
                         </div>
             
-            
-            
-                        <div class="row justify-content-center align-items-top g-5" style="min-height: 750px;">
-            
-                            <div class="col-md-8 hover-zoom-rec-card ">
-                                <!-- Flexbox wrapper to control alignment -->
-                                <div class="row justify-content-center align-items-center mb-4">
-                                    <div class="col-auto">
-                                        <div class="btn-group d-flex gap-1" role="group" aria-label="Toggle button group" id="userButtonsContainer">
-                                        </div><!-- Buttons will be inserted here -->
-                                    </div>
-                                </div>
-                                <div class="row justify-content-center align-items-top g-0 overflow-auto" id="RecommendContainerReal" 
-                                    style="height: 600px;">   <!-- Should be max height for scrollbar!!!!! -->
-                                </div>
-                            </div>
-                        </div>
+                        <div class="row row-cols-1 row-cols-md-5 g-4 hover-zoom" id="RecommendedCardsContainer"></div>
             
                     </div>
-            
-            
                 </div>
             
-            
-
-
-
-
             </div>
 
 
