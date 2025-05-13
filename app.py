@@ -65,7 +65,7 @@ def get_user(username):
         user_data = profile.to_dict()
         return jsonify(user_data)
     else:
-        # # TODO: Below only for quick testing
+        # TODO: Below only for quick testing
         user_data = user_profiles[username].to_dict()
         return jsonify(user_data)
         # # user_profiles[username].initialize_complete = False  # Reset initialization

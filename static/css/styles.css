@@ -1,4 +1,84 @@
 
+
+/* Custom card for user cards */
+.user-card {
+    border-radius: 1.3rem;
+    transition: transform 0.3s ease;
+    position: relative; /* Needed for z-index to work */
+    z-index: 1; /* Default layer */
+}
+.user-card:hover {
+    transform: scale(1.05);
+    z-index: 10; /* Bring to front */
+}
+
+/* Color for scores on movie modals */
+.text-score {
+  color: gold !important;
+}
+
+/* For the edit blacklist button */
+.edit-blacklist-link:hover {
+    text-decoration: underline !important;
+}
+
+/* For the recommendation cards in horizontal row layout */
+.rec-card-img {
+    height: 120px;
+    object-fit: cover;
+}
+.rec-card {
+    border-radius: 8px;
+    border-width: 0px;
+    background: var(--bs-secondary-bg);
+    height: 120px;  /* 120px */
+    transition: background-color 0.1s ease-in-out; /* Smooth transition */
+}
+.hover-zoom-rec-card .card:hover {
+    background-color: rgba(173, 216, 230, .5);
+}
+
+/* To remove spacing between elements */
+.no-spacing {
+  margin: 0;
+  line-height: 1.2; /* Adjust if needed */
+}
+
+
+/* Scale the entire card on hover */
+.hover-zoom {
+    transition: transform 0.3s ease;
+}
+.hover-zoom:hover {
+    transform: scale(1.10);
+}
+
+/* Blacklist button hidden by default */
+.blacklist-btn {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    padding: 6px;
+}
+
+.blacklist-btn:not(.d-none) {
+    opacity: 1;
+}
+
+/* Show the button when the parent card is hovered */
+.hover-zoom:hover .blacklist-btn {
+    opacity: 1;
+}
+
+
+
+
+
+
+
+
 /* SCROLLBAR STYLES */
 /* Hide scrollbar but allow scrolling for the left column */
 .left-scrollable {
@@ -33,7 +113,6 @@
 }
 #RecommendContainerReal::-webkit-scrollbar-track {
     background: var(--bs-secondary-bg);
-
 }
 
 /* Hide horizontal scrollbar cross-browser (for example, for user score row in movie modals */
@@ -46,59 +125,4 @@
 }
 
 
-
-
-
-
-/* Custom card for user cards */
-.user-card {
-    border-radius: 1.3rem;
-    transition: transform 0.3s ease;
-    position: relative; /* Needed for z-index to work */
-    z-index: 1; /* Default layer */
-}
-.user-card:hover {
-    transform: scale(1.05);
-    z-index: 10; /* Bring to front */
-}
-
-/* Color for scores on movie modals */
-.text-score {
-  color: gold !important;
-}
-
-/* Add a hover effect to images */
-.hover-zoom img {
-    transition: transform 0.3s ease;
-}
-.hover-zoom img:hover {
-    transform: scale(1.10);
-}
-
-/* For the edit blacklist button */
-.edit-blacklist-link:hover {
-    text-decoration: underline !important;
-}
-
-/* For the recommendation cards in horizontal row layout */
-.rec-card-img {
-    height: 120px;
-    object-fit: cover;
-}
-.rec-card {
-    border-radius: 8px;
-    border-width: 0px;
-    background: var(--bs-secondary-bg);
-    height: 120px;  /* 120px */
-    transition: background-color 0.1s ease-in-out; /* Smooth transition */
-}
-.hover-zoom-rec-card .card:hover {
-    background-color: rgba(173, 216, 230, .5);
-}
-
-/* To remove spacing between elements */
-.no-spacing {
-  margin: 0;
-  line-height: 1.2; /* Adjust if needed */
-}
 

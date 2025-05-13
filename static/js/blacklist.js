@@ -26,28 +26,24 @@ function generateUserCheckboxes() {
 }
 
 
-async function blacklistMovie(slug, title, year, weight) {
-    weight = parseInt(weight, 10);
-
-    const activeButtons = document.querySelectorAll("#userButtonsContainer button.active");
-    const allActiveUsers = Array.from(activeButtons).map(btn => btn.getAttribute("data-user"));
+async function blacklistMovie(slug, title, year) {
 
     // Auto-blacklist for a single user
-    if (allActiveUsers.length === 1) {
-        const user = allActiveUsers[0];
+    if (allUsers.length === 1) {
+        const username = allUsers[0].username;
 
         try {
-            console.log(`Adding ${slug} to ${user}'s blacklist...`);
-            const response = await fetch(`/add_to_blacklist/${user}/${slug}`, {
+            console.log(`Adding ${slug} to ${username}'s blacklist...`);
+            const response = await fetch(`/add_to_blacklist/${username}/${slug}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             });
 
             if (!response.ok) {
-                throw new Error(`Failed to add ${slug} to ${user}'s blacklist`);
+                throw new Error(`Failed to add ${slug} to ${username}'s blacklist`);
             }
 
-            await waitForCompareUpdate();
+            await Recommend();
 
             return;
             
@@ -70,15 +66,6 @@ async function blacklistMovie(slug, title, year, weight) {
 
     addToBlacklistBtn.disabled = true;
     loadingIndicator.style.display = "none";
-
-    // Pre-check box based on weight
-    if (weight === -1 && checkboxes[0]) {
-        checkboxes[0].checked = true;
-        addToBlacklistBtn.disabled = false;
-    } else if (weight === 1 && checkboxes[1]) {
-        checkboxes[1].checked = true;
-        addToBlacklistBtn.disabled = false;
-    }
 
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change", () => {
@@ -110,7 +97,7 @@ async function blacklistMovie(slug, title, year, weight) {
                 }
             }
 
-            await waitForCompareUpdate();
+            await Recommend();
             modal.hide();
         } catch (error) {
             console.error(error);
@@ -214,7 +201,7 @@ document.addEventListener("click", async function (event) {
             document.getElementById("editBlacklistModal").dispatchEvent(new Event("show.bs.modal"));
 
             // Wait for compare button action to complete
-            await waitForCompareUpdate();
+            await Recommend();
         } catch (error) {
             console.error(error);
             alert("Something went wrong. Please try again.");
@@ -236,7 +223,7 @@ document.addEventListener("click", async function (event) {
             if (!response.ok) throw new Error(`Failed to reset ${user} blacklist`);
 
             // Wait for compare button action to complete
-            await waitForCompareUpdate();
+            await Recommend();
         } catch (error) {
             console.error(error);
             alert(`Error resetting ${user} blacklist`);
@@ -245,21 +232,4 @@ document.addEventListener("click", async function (event) {
         }
     }
 });
-
-
-
-async function waitForCompareUpdate() {
-    // return new Promise((resolve) => {
-    //     function onCompareComplete() {
-    //         console.log("Compare button action completed.");
-    //         resolve();
-    //     }
-
-    //     compareButton.addEventListener("compareComplete", onCompareComplete, { once: true });
-
-        const event = new Event("click", { bubbles: true });
-        event.refresh = 1;
-        compareButton.dispatchEvent(event);
-    // });
-}
 
