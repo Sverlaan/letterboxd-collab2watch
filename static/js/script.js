@@ -3,9 +3,9 @@ document.getElementById('resetFilters').addEventListener('click', async function
 
     document.getElementById('minRating').value = 0;
     document.getElementById('maxRating').value = 5;
-    document.getElementById('minRuntime').value = 0;
-    document.getElementById('maxRuntime').value = 9999;
-    document.getElementById('minYear').value = 1870;
+    document.getElementById('minRuntime').value = 70;
+    document.getElementById('maxRuntime').value = 250;
+    document.getElementById('minYear').value = 1940;
     document.getElementById('maxYear').value = 2025;
 
     await Recommend();
@@ -300,7 +300,7 @@ async function CreateModal(movie) {
 
     // Build user scores section
     let userScoresHtml = `
-        <div class="row g-3 mt-1 justify-content-start flex-nowrap overflow-auto" style="white-space: nowrap;" id="userScoresRow2">
+        <div class="row g-3 mt-1 justify-content-start flex-nowrap overflow-auto no-scrollbar" style="white-space: nowrap;" id="userScoresRow">
             <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
                 <h5 class="text-center mb-2 text-muted">${movie.rating}</h5>
                 <img src="${letterboxd_logo}" class="rounded-circle" style="width: 60px; height: 60px;">
