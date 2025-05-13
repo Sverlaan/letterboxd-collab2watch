@@ -41,7 +41,7 @@ recommender_instance = None
 
 @app.route('/')
 def home():
-    # user_profiles.clear()  # Clear user profiles on home page load, # TODO: off only for quick testing
+    user_profiles.clear()  # Clear user profiles on home page load, # TODO: off only for quick testing
     return render_template('index.html')
 
 
@@ -295,4 +295,4 @@ def reset_blacklist(username):
 
 if __name__ == '__main__':
     print("Starting Flask App...")
-    app.run(debug=True)
+    app.run(debug=False)
