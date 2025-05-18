@@ -35,3 +35,31 @@ document.getElementById('usernameForm').addEventListener('submit', function (eve
     document.getElementById('inputUsername').placeholder ='Username';  
     document.getElementById('inputUsername').value = "";
 });
+
+// For resizing the sidebar
+const resizer = document.getElementById('resizer');
+const sidebar = document.getElementById('sidebar');
+let isResizing = false;
+
+resizer.addEventListener('mousedown', function (e) {
+  isResizing = true;
+  document.body.style.cursor = 'ew-resize';
+  document.body.classList.add('no-select'); // 👈 prevent text selection
+});
+
+document.addEventListener('mousemove', function (e) {
+  if (!isResizing) return;
+
+  const newWidth = e.clientX;
+  if (newWidth > 300 && newWidth < 800) {
+    sidebar.style.width = newWidth + 'px';
+  }
+});
+
+document.addEventListener('mouseup', function () {
+  if (isResizing) {
+    isResizing = false;
+    document.body.style.cursor = 'default';
+    document.body.classList.remove('no-select'); // 👈 re-enable text selection
+  }
+});

@@ -7,6 +7,9 @@ from backend.recommend import MovieRecommender, get_common_watchlist, get_single
 from backend.user import UserProfile
 import os
 
+# Toggle debug mode
+DEBUG_MODE = True
+
 
 # Ignore warnings
 warnings.filterwarnings("ignore")
@@ -41,7 +44,8 @@ recommender_instance = None
 
 @app.route('/')
 def home():
-    user_profiles.clear()  # Clear user profiles on home page load, # TODO: off only for quick testing
+    if not DEBUG_MODE:
+        user_profiles.clear()  # Clear user profiles on home page load, # TODO: off only for quick testing
     return render_template('index.html')
 
 
@@ -295,4 +299,4 @@ def reset_blacklist(username):
 
 if __name__ == '__main__':
     print("Starting Flask App...")
-    app.run(debug=False)
+    app.run(debug=DEBUG_MODE)

@@ -1,5 +1,4 @@
 
-
 /* Custom card for user cards */
 .user-card {
     border-radius: 1.3rem;
@@ -124,5 +123,10 @@
     display: none;                /* Chrome, Safari */
 }
 
-
-
+/* Avoid accidental text selection during left column resizing */
+.no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    }
