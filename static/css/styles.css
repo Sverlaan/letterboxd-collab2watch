@@ -1,4 +1,27 @@
 
+/* Category buttons */
+.category-btn {
+    background: none;
+    border: none;
+    color: var(--bs-body-color); /* Automatically adjusts to light/dark theme */
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    font-size: 36px;
+    font-weight: 100;
+}
+
+.category-btn.active {
+    background-color: var(--bs-warning);
+    color: var(--bs-black);
+    border-radius: 0.5rem;
+    font-size: 36px;
+    font-weight: 350;
+}
+
+.category-btn:hover {
+    cursor: pointer;
+}
+
 /* Custom card for user cards */
 .user-card {
     border-radius: 1.3rem;

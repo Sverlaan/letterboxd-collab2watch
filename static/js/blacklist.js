@@ -43,7 +43,8 @@ async function blacklistMovie(slug, title, year) {
                 throw new Error(`Failed to add ${slug} to ${username}'s blacklist`);
             }
 
-            await Recommend();
+            const category = getSelectedCategory();
+            await Recommend(category);
 
             return;
             
@@ -97,7 +98,9 @@ async function blacklistMovie(slug, title, year) {
                 }
             }
 
-            await Recommend();
+            const category = getSelectedCategory();
+            await Recommend(category);
+
             modal.hide();
         } catch (error) {
             console.error(error);
@@ -143,7 +146,7 @@ document.getElementById("editBlacklistModal").addEventListener("show.bs.modal", 
             <ul class="list-group" id="blacklistMovies-${user.username}">
                 <li class="list-group-item text-muted">Loading...</li>
             </ul>
-            <button class="btn btn-sm btn-danger mt-2 reset-blacklist" data-username="${user.username}">Reset Blacklist</button>
+            <button class="btn btn-danger mt-2 reset-blacklist w-100" data-username="${user.username}">Reset Blacklist</button>
         `;
         contentContainer.appendChild(contentPane);
     });
@@ -201,7 +204,8 @@ document.addEventListener("click", async function (event) {
             document.getElementById("editBlacklistModal").dispatchEvent(new Event("show.bs.modal"));
 
             // Wait for compare button action to complete
-            await Recommend();
+            const category = getSelectedCategory();
+            await Recommend(category);
         } catch (error) {
             console.error(error);
             alert("Something went wrong. Please try again.");
@@ -223,7 +227,8 @@ document.addEventListener("click", async function (event) {
             if (!response.ok) throw new Error(`Failed to reset ${user} blacklist`);
 
             // Wait for compare button action to complete
-            await Recommend();
+            const category = getSelectedCategory();
+            await Recommend(category);
         } catch (error) {
             console.error(error);
             alert(`Error resetting ${user} blacklist`);

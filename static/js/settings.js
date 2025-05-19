@@ -1,3 +1,40 @@
+/////////////////////////////////////////// Categories //////////////////////////////////////////
+document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const selectedCategory = btn.dataset.category;
+        console.log("Selected:", selectedCategory);
+
+        // Change id="categoryText" to the selected category
+        const categoryText = document.getElementById('categoryText');
+        if (selectedCategory === 'recommendations') {
+            categoryText.innerHTML = "Combined and personalized recommendations for movies you have not seen!<br>Use the blacklist functionality to dismiss any suggestions and tune the recommendations.";
+        }
+        else if (selectedCategory === 'watchlist') {
+            categoryText.innerHTML = "Movies you want to watch!<br>This is the common watchlist of all selected users.";
+        }
+        else if (selectedCategory === 'rewatches') {
+            categoryText.innerHTML = "Movies you might want to rewatch!<br>These are movies the selected users have already seen.";
+        }
+        else {
+            categoryText.innerHTML = "TODO TEXT HERE";
+        }
+
+        await Recommend(selectedCategory);
+    });
+});
+
+
+// Function to get the selected category from the category buttons
+function getSelectedCategory() {
+    const activeBtn = document.querySelector('.category-btn.active');
+    return activeBtn ? activeBtn.dataset.category : null;
+}
+
+
+
 ////////////////////////////////////////// Filter and Settings //////////////////////////////////////////
 function GetFilterSettings() {
     const minRating = document.getElementById('minRating').value;

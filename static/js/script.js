@@ -8,6 +8,9 @@ async function fetchUserData(username) {
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
 
+        // Reset the username header text after a successful fetch
+        document.getElementById("enterUsernameHeader").textContent = "Letterboxd: ";
+
         // Create and insert user card
         createUserCard(username, data);
 
@@ -30,11 +33,12 @@ async function fetchUserData(username) {
         // Add user object to allUsers list
         allUsers.push(data);
 
-        await Recommend();
+        const category = getSelectedCategory();
+        await Recommend(category);
 
     } catch (error) {
         console.error(error);
-        document.getElementById("enterUsernameHeader").textContent = "User not found. Try Again:";
+        document.getElementById("enterUsernameHeader").textContent = "User not found: ";
     }
 }
 
@@ -90,7 +94,8 @@ function createUserCard(username, user) {
                 allUsers = allUsers.filter(user => user.username !== usernameToRemove);
 
                 if (allUsers.length > 0) {
-                    await Recommend();
+                    const category = getSelectedCategory();
+                    await Recommend(category);
                 }
                 else {
                     document.getElementById("contentContainer").classList.add('d-none');
@@ -117,7 +122,9 @@ async function InitializeAndTrain() {
 }
 
 
-async function Recommend() {
+async function Recommend(selectedCategory) {
+
+    console.log("Selected category:", selectedCategory);
 
     document.getElementById("go-spinner").style.display = "block"; // Show loading spinner
     //document.getElementById("contentContainer").classList.add('d-none');
@@ -131,7 +138,7 @@ async function Recommend() {
     const activeUsernames = getActiveUsernames();
     
     // Get Recommendations
-    await FetchAndCreateRecommendationCards(activeUsernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
+    await FetchAndCreateRecommendationCards(activeUsernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
 
     document.getElementById("contentContainer").classList.remove('d-none');
     document.getElementById("go-spinner").style.display = "none"; // Hide loading spinner
@@ -144,7 +151,7 @@ function getActiveUsernames() {
 }
 
 
-async function FetchAndCreateRecommendationCards(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
+async function FetchAndCreateRecommendationCards(usernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
     try {
 
         if (usernames.length === 0) {
@@ -155,7 +162,7 @@ async function FetchAndCreateRecommendationCards(usernames, minRating, maxRating
         }
 
         // You can join them with commas (or however your backend expects)
-        const response = await fetch(`/fetch_recommendations/${usernames.join(",")}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
+        const response = await fetch(`/fetch_recommendations/${usernames.join(",")}/${selectedCategory}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
         if (!response.ok) throw new Error("Something went wrong getting recommendations");
         const data = await response.json();
 
@@ -348,6 +355,8 @@ async function FetchAndCreateRecommendationCardsOLD(usernames, minRating, maxRat
         console.error(error);
     }
 }
+
+
 
 
 

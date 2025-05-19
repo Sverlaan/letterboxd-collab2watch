@@ -16,7 +16,7 @@
         <div id="sidebar" class="bg-secondary-subtle left-scrollable" style="width: 500px; min-width: 300px; max-width: 800px; overflow-y: auto; overflow-x: hidden;">
 
             <!-- Top-Right Theme Toggle -->
-            <div class="position-absolute top-0 end-0 m-2">
+            <div class="position-absolute top-0 end-0 m-3">
                 <div class="d-flex align-items-center gap-2">
                   <div id="go-spinner" class="spinner-border text-secondary" style="display:none; width: 40px; height: 40px;"></div>
                   <button class="btn btn-outline-secondary" style="width: 50pt; font-size: 18pt" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
@@ -185,13 +185,24 @@
             <!-- Parent container for all the content -->
             <div class="container-fluid d-none w-75" id="contentContainer">    
                 
-                <h1 class="text-center" style="margin-top: 7rem;">Recommendations</h1>
+                <!-- <h1 class="text-center" style="margin-top: 7rem;">Recommendations</h1> -->
+
+                <div class="text-center" style="margin-top: 7rem; min-height: 80px;">
+                    <div id="category-toggle" class="d-inline-flex gap-4">
+                      <button class="category-btn" data-category="watchlist">Watchlist</button>
+                      <button class="category-btn active" data-category="recommendations">Recommendations</button>
+                      <button class="category-btn" data-category="rewatches">Rewatches</button>
+                    </div>
+                </div>
+                  
         
                 <div class="container px-5 mb-5 mt-3" id="RecommendContainer">
         
-                    <div class="row justify-content-center align-items-top g-0 mb-5">
-                        <p class="text-center text-muted no-spacing">Combined and personalized recommendations for movies you have not seen!</p>
-                        <p class="text-center text-muted mb-3">Use the blacklist functionality to dismiss any suggestions and tune the recommendations.</p>
+                    <div class="row justify-content-center align-items-top g-0 mb-5" style="min-height: 60px;">
+                        <p class="text-center text-muted no-spacing mb-3" id="categoryText">
+                            Combined and personalized recommendations for movies you have not seen!<br>
+                            Use the blacklist functionality to dismiss any suggestions and tune the recommendations.
+                        </p>
                     </div>
         
                     <div class="row row-cols-1 row-cols-md-5 g-4" id="RecommendedCardsContainer"></div>

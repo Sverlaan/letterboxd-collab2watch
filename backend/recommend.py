@@ -399,7 +399,39 @@ def get_single_watchlistOLD(username, all_usernames, user_profiles, recommender)
     return [slug for slug, _ in preds]
 
 
-def get_rewatchlist(username1, other_usernames, user_profiles, recommender):
+def get_rewatchlist(usernames, user_profiles):
+    """
+    Get movies that have been rated by all users in 'usernames',
+    ordered by their average rating from those users (descending).
+    """
+    if not usernames:
+        return []
+
+    # Get rated movies for each user (slug -> rating)
+    user_ratings = {username: user_profiles[username].get_ratings() for username in usernames}
+
+    # Compute intersection of rated slugs
+    common_slugs = set(user_ratings[usernames[0]].keys())
+    for ratings in user_ratings.values():
+        common_slugs.intersection_update(ratings.keys())
+
+    if not common_slugs:
+        return []
+
+    # Compute average rating for each common slug
+    avg_ratings = []
+    for slug in common_slugs:
+        total = sum(user_ratings[username][slug] for username in usernames)
+        avg = total / len(usernames)
+        avg_ratings.append((slug, avg))
+
+    # Sort descending by average rating
+    avg_ratings.sort(key=lambda x: x[1], reverse=True)
+
+    return [slug for slug, _ in avg_ratings]
+
+
+def get_rewatchlistOLD(username1, other_usernames, user_profiles, recommender):
     """
     Get rewatchlist of user1 that other users have not seen yet,
     ordered by average predicted rating from those other users.

@@ -222,13 +222,29 @@ def fetch_rewatchlist(username, other_usernames, minRating, maxRating, minRuntim
     return jsonify(movies)
 
 
-@app.route('/fetch_recommendations/<string:usernames>/<string:minRating>/<string:maxRating>/<int:minRuntime>/<int:maxRuntime>/<int:minYear>/<int:maxYear>', methods=['GET'])
-def fetch_recommendations(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
+################ Fetch data for all categories of recommendations ################
+@app.route('/fetch_recommendations/<string:usernames>/<string:selectedCategory>/<string:minRating>/<string:maxRating>/<int:minRuntime>/<int:maxRuntime>/<int:minYear>/<int:maxYear>', methods=['GET'])
+def fetch_recommendations(usernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
 
     start = timer()
     usernames = usernames.split(",")
-    slugs, scores_dict = recommender_instance.get_recommendations(usernames, user_profiles, amount=5000)
-    movies = retrieve_movies(slugs, float(minRating), float(maxRating), minRuntime, maxRuntime, minYear, maxYear, top_k=50, scores=scores_dict)
+
+    scores_dict = None
+    top_k = 1
+
+    if selectedCategory == "recommendations":
+        slugs, scores_dict = recommender_instance.get_recommendations(usernames, user_profiles, amount=5000)
+        top_k = 50
+    elif selectedCategory == "watchlist":
+        slugs = get_common_watchlist(usernames, user_profiles, recommender_instance)
+        top_k = 1000
+    elif selectedCategory == "rewatches":
+        slugs = get_rewatchlist(usernames, user_profiles)
+        top_k = 50
+    else:
+        return jsonify({"error": "Invalid category"}), 400
+
+    movies = retrieve_movies(slugs, float(minRating), float(maxRating), minRuntime, maxRuntime, minYear, maxYear, top_k=top_k, scores=scores_dict)
     print(f"Time taken getting recommendations and retrieving: {timer() - start}")
     return jsonify(movies)
 
@@ -261,6 +277,7 @@ def fetch_explanation(username, slug):
     return jsonify({"success": True, "message": "Influential movies found", "username": username, "movies": movies})
 
 
+############### Fetch data for blacklists ################
 @app.route('/fetch_blacklists/<string:usernames>', methods=['GET'])
 def get_blacklists(usernames):
     usernames = usernames.split(",")

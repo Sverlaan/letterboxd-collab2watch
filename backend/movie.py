@@ -12,8 +12,9 @@ db = SQLAlchemy()  # Define db, initialize in app.py
 
 API_KEY = os.getenv("API_KEY")  # Retrieves API_KEY from environment variables
 if not API_KEY:
-    API_KEY = "123"
-    #raise ValueError("Missing API_KEY environment variable!")
+    # TODO: Fix API_KEY through dotenv
+    API_KEY = "000"
+    # raise ValueError("Missing API_KEY environment variable!")
 
 
 class Movie(db.Model):
@@ -50,12 +51,15 @@ def retrieve_movies(movie_slugs, minRating=0, maxRating=5, minRuntime=0, maxRunt
     # Fetch movie details of movies not in db
     slugs_in_db = {movie.slug for movie in Movie.query.filter(Movie.slug.in_(movie_slugs)).all()}
     slugs_to_fetch = set(movie_slugs).difference(slugs_in_db)
-    for slug in slugs_to_fetch:
-        print(f"{slug} not in db. Resort to scraping.")
-        movie_data = get_movie_data(slug)
-        movie = Movie(**movie_data)
-        db.session.add(movie)
-    db.session.commit()
+
+    # TODO: Fix issue where movie title is None
+    # for slug in slugs_to_fetch:
+    #     print(f"{slug} not in db. Resort to scraping.")
+    #     movie_data = get_movie_data(slug)
+    #     movie = Movie(**movie_data)
+    #     db.session.add(movie)
+    # db.session.commit()
+    movie_slugs = [slug for slug in movie_slugs if slug in slugs_in_db]  # Get rid of this once fixed
 
     retrieved_movies = Movie.query.filter(Movie.rating >= minRating, Movie.rating <= maxRating,
                                           Movie.runtime >= minRuntime, Movie.runtime <= maxRuntime,
@@ -107,6 +111,9 @@ def get_movie_data(movie_slug):
         if rating is None:
             print(rating)
             rating = -1
+
+        # TODO: FIX WHEN MOVIE TITLE IS  NONE
+        print(f"!!!!!!!MOVIEEE   with slug {movie_slug} has title {movie_inst.title} and rating {rating}")
 
         return {"slug": movie_slug,
                 "title": movie_inst.title,
