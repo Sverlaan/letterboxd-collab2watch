@@ -119,7 +119,7 @@ async function InitializeAndTrain() {
 
 async function Recommend() {
 
-    //document.getElementById("go-spinner").style.display = "block"; // Show loading spinner
+    document.getElementById("go-spinner").style.display = "block"; // Show loading spinner
     //document.getElementById("contentContainer").classList.add('d-none');
 
     console.log("Get recs for active usernames: " + allUsers.map(user => user.username));
@@ -134,7 +134,7 @@ async function Recommend() {
     await FetchAndCreateRecommendationCards(activeUsernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
 
     document.getElementById("contentContainer").classList.remove('d-none');
-    //document.getElementById("go-spinner").style.display = "none"; // Hide loading spinner
+    document.getElementById("go-spinner").style.display = "none"; // Hide loading spinner
 
 }
 
