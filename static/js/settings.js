@@ -56,12 +56,16 @@ document.getElementById('resetFilters').addEventListener('click', async function
     document.getElementById('minYear').value = 1940;
     document.getElementById('maxYear').value = 2025;
 
-    await Recommend();
+    const category = getSelectedCategory();
+    console.log("Selected for reset filters:", category);
+    await Recommend(category);
 });
 
 document.getElementById('applyFilters').addEventListener('click', async function (event) {
 
-    await Recommend();
+    const category = getSelectedCategory();
+    console.log("Selected for reset filters:", category);
+    await Recommend(category);
 });
 
 // Listen for the form submit event
