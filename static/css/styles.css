@@ -10,6 +10,14 @@
     font-weight: 100;
 }
 
+/* Default: Light Theme */
+:root {
+    --bs-warning-hover: #ffcd39; /* darker amber for hover */
+}
+[data-bs-theme="dark"] {
+    --bs-warning-hover: #cc9a06; /* deeper amber, better contrast in dark mode */
+}
+
 .category-btn.active {
     background-color: var(--bs-warning);
     color: var(--bs-black);
@@ -18,9 +26,17 @@
     font-weight: 350;
 }
 
-.category-btn:hover {
+.category-btn.active:hover {
     cursor: pointer;
+    background-color: var(--bs-warning-hover);
 }
+
+.category-btn:not(.active):hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+
 
 /* Custom card for user cards */
 .user-card {
