@@ -6,7 +6,7 @@
     color: var(--bs-body-color); /* Automatically adjusts to light/dark theme */
     padding: 0.5rem 1rem;
     transition: all 0.3s ease;
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 100;
 }
 
@@ -22,8 +22,8 @@
     background-color: var(--bs-warning);
     color: var(--bs-black);
     border-radius: 0.5rem;
-    font-size: 36px;
-    font-weight: 350;
+    font-size: 32px;
+    font-weight: 300;
 }
 
 .category-btn.active:hover {

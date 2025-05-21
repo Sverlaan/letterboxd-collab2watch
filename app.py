@@ -8,7 +8,7 @@ from backend.user import UserProfile
 import os
 
 # Toggle debug mode
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 
 # Ignore warnings
