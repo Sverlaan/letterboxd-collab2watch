@@ -36,8 +36,6 @@
     opacity: 0.5;
 }
 
-
-
 /* Custom card for user cards */
 .user-card {
     border-radius: 1.3rem;
@@ -49,32 +47,16 @@
     transform: scale(1.05);
     z-index: 10; /* Bring to front */
 }
+.text-neon-green {
+    color: #39ff14; /* Neon green */
+    /* text-shadow: 0 0 5px #39ff14, 0 0 10px #39ff14, 0 0 15px #39ff14; */
+}
 
 /* Color for scores on movie modals */
 .text-score {
   color: gold !important;
 }
 
-/* For the edit blacklist button */
-.edit-blacklist-link:hover {
-    text-decoration: underline !important;
-}
-
-/* For the recommendation cards in horizontal row layout */
-.rec-card-img {
-    height: 120px;
-    object-fit: cover;
-}
-.rec-card {
-    border-radius: 8px;
-    border-width: 0px;
-    background: var(--bs-secondary-bg);
-    height: 120px;  /* 120px */
-    transition: background-color 0.1s ease-in-out; /* Smooth transition */
-}
-.hover-zoom-rec-card .card:hover {
-    background-color: rgba(173, 216, 230, .5);
-}
 
 /* To remove spacing between elements */
 .no-spacing {
@@ -89,6 +71,11 @@
 }
 .hover-zoom:hover {
     transform: scale(1.10);
+}
+
+/* For the edit blacklist button */
+.edit-blacklist-link:hover {
+    text-decoration: underline !important;
 }
 
 /* Blacklist button hidden by default */
@@ -109,11 +96,6 @@
 .hover-zoom:hover .blacklist-btn {
     opacity: 1;
 }
-
-
-
-
-
 
 
 

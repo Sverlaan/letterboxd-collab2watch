@@ -7,9 +7,6 @@ from backend.recommend import MovieRecommender, get_common_watchlist, get_single
 from backend.user import UserProfile
 import os
 
-# Toggle debug mode
-DEBUG_MODE = True
-
 
 # Ignore warnings
 warnings.filterwarnings("ignore")
@@ -18,7 +15,6 @@ warnings.filterwarnings("ignore")
 app = Flask(__name__)
 
 # Configure the database path
-# Detect if running on Railway
 db_path = os.path.join(os.path.dirname(__file__), 'database/movies.db')  # Use local directory
 print(f"Database path: {db_path}")
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
@@ -34,63 +30,53 @@ else:
     model_path = os.path.join(os.path.dirname(__file__), 'model/kernel_mf.pkl')
 print(f"Model path: {model_path}")
 
-################ Initialization ################
-# Store user profiles
+# Initialize global variables
+DEBUG_MODE = True
 user_profiles = dict()
-
-# Store recommender instance
-recommender_instance = None
+recommender = None
 
 
+################ INITIALIZATION ################
 @app.route('/')
 def home():
+    """Render the home page."""
     if not DEBUG_MODE:
         user_profiles.clear()  # Clear user profiles on home page load, # TODO: off only for quick testing
     return render_template('index.html')
 
 
-@app.route('/how_it_works')
-def how_it_works():
-    return render_template('how_it_works.html')
-
-
-@app.route('/credits')
-def credits():
-    return render_template('credits.html')
-
-
-@app.route('/get_user/<string:username>', methods=['GET'])
-def get_user(username):
-    # try:
-    start = timer()
-    if username not in user_profiles and len(user_profiles) < 8:
-        profile = UserProfile(username)
-        user_profiles[username] = profile
-        user_data = profile.to_dict()
-        return jsonify(user_data)
-    else:
-        # TODO: Below only for quick testing
-        user_data = user_profiles[username].to_dict()
-        return jsonify(user_data)
-        # # user_profiles[username].initialize_complete = False  # Reset initialization
-        raise Exception("User already exists")
-
-    # except:
-    #     return jsonify({"error": "User not found"}), 404
-
-
-@app.route('/get_user_data/<string:username>', methods=['GET'])
-def get_user_data(username):
+@app.route('/init_user/<string:username>', methods=['GET'])
+def init_user(username):
+    """Initialize a user profile."""
     try:
-        print(f"Initializing {username}")
+        start = timer()
+        if username not in user_profiles and len(user_profiles) < 8:
+            profile = UserProfile(username)
+            user_profiles[username] = profile
+            user_data = profile.to_dict()
+            return jsonify(user_data)
+        else:
+            # TODO: Below only for quick testing
+            user_data = user_profiles[username].to_dict()
+            return jsonify(user_data)
+            # # user_profiles[username].initialize_complete = False  # Reset initialization
+            raise Exception("User already exists")
+    except:
+        return jsonify({"error": "User not found"}), 404
+
+
+@app.route('/fetch_user_data/<string:username>', methods=['GET'])
+def fetch_user_data(username):
+    """Fetch user data."""
+    try:
+        print(f"Initializing {username}...")
         start = timer()
         user_inst = user_profiles[username]
         if not user_inst.initialize_complete:
             user_inst.initialize_complete_profile()
+            print(f"Initialized {username} in {timer() - start} seconds")
         else:
             print(f"{username} already initialized")
-        print(f"Time taken: {timer() - start}")
-
         return jsonify({"success": True})
     except:
         return jsonify({"success": False}), 404
@@ -98,14 +84,14 @@ def get_user_data(username):
 
 @app.route("/preprocess_data/<string:usernames>", methods=["GET"])
 def preprocess_data(usernames):
-    """Simulate a task that takes a few seconds"""
-    global recommender_instance
+    """Preprocess data for the recommender system."""
+    global recommender
     try:
-        if recommender_instance is None:
-            recommender_instance = MovieRecommender(model_path=model_path)
+        if recommender is None:
+            recommender = MovieRecommender(model_path=model_path)
 
         usernames = usernames.split(",")
-        recommender_instance.preprocess(usernames, user_profiles)
+        recommender.preprocess(usernames, user_profiles)
         return jsonify({"success": True})
     except:
         return jsonify({"success": False}), 404
@@ -113,18 +99,45 @@ def preprocess_data(usernames):
 
 @app.route("/train_model", methods=["GET"])
 def train_model():
-    """Simulate a task that takes a few seconds"""
-    # try:
-    recommender_instance.train_model()
-    return jsonify({"success": True})
-    # except:
-    #     return jsonify({"success": False}), 404
+    """Train the recommender model."""
+    try:
+        recommender.train_model()
+        return jsonify({"success": True})
+    except:
+        return jsonify({"success": False}), 404
 
 
-################ Fetch data for content ################
+################ FETCH DATA FOR CONTENT ################
+@app.route('/fetch_recommendations/<string:allUsernames>/<string:selectedUsernames>/<string:selectedCategory>/<string:minRating>/<string:maxRating>/<int:minRuntime>/<int:maxRuntime>/<int:minYear>/<int:maxYear>', methods=['GET'])
+def fetch_recommendations(allUsernames, selectedUsernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
+    """Fetch recommendations based on selected category."""
+
+    start = timer()
+    allUsernames = allUsernames.split(",")
+
+    # TODO: Use selectedUsernames for each category as intended
+    selectedUsernames = selectedUsernames.split(",")
+
+    scores_dict = None
+    top_k = 50
+
+    if selectedCategory == "recommendations":
+        slugs, scores_dict = recommender.get_recommendations(allUsernames, user_profiles, amount=5000)
+    elif selectedCategory == "watchlist":
+        slugs = get_common_watchlist(allUsernames, user_profiles, recommender)
+    elif selectedCategory == "rewatches":
+        slugs = get_rewatchlist(allUsernames, user_profiles)
+    else:
+        return jsonify({"error": "Invalid category"}), 400
+
+    movies = retrieve_movies(slugs, float(minRating), float(maxRating), minRuntime, maxRuntime, minYear, maxYear, top_k=top_k, scores=scores_dict)
+    print(f"Time taken getting recommendations and retrieving: {timer() - start}")
+    return jsonify(movies)
+
 
 @app.route('/fetch_movie_data_for_modal/<string:slug>/<string:usernames>', methods=['GET'])
 def fetch_movie_data_for_modal(slug, usernames):
+    """Fetch movie data for a modal."""
     # Get movie details
     start = timer()
     movie = Movie.query.filter_by(slug=slug).first()
@@ -145,7 +158,7 @@ def fetch_movie_data_for_modal(slug, usernames):
             score_color = "text-muted"
             numeric_score = rating  # for combined score
         else:
-            pred = recommender_instance.predict_user_rating(username, slug)
+            pred = recommender.predict_user_rating(username, slug)
             if pred is not None:
                 score = f"{round(pred * 20, 1)}%"
                 score_color = "text-score"
@@ -184,76 +197,11 @@ def fetch_movie_data_for_modal(slug, usernames):
     return jsonify(movie_data)
 
 
-@app.route('/fetch_common_watchlist/<string:usernames>/<string:minRating>/<string:maxRating>/<int:minRuntime>/<int:maxRuntime>/<int:minYear>/<int:maxYear>', methods=['GET'])
-def fetch_common_watchlist(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
-
-    start = timer()
-    usernames = usernames.split(",")
-    slugs = get_common_watchlist(usernames, user_profiles, recommender_instance)
-    if len(slugs) == 0:
-        return jsonify({"success": False, "message": "No common watchlist found", "movies": []})
-    # print(f"Time taken: {timer() - start}")
-
-    movies = retrieve_movies(slugs, float(minRating), float(maxRating), minRuntime, maxRuntime, minYear, maxYear, top_k=-1)
-    return jsonify({"success": True, "message": "Common watchlist found", "movies": movies})
-
-
-@app.route('/fetch_single_watchlist/<string:username>/<string:all_usernames>/<string:minRating>/<string:maxRating>/<int:minRuntime>/<int:maxRuntime>/<int:minYear>/<int:maxYear>', methods=['GET'])
-def fetch_single_watchlist(username, all_usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
-
-    start = timer()
-    all_usernames = all_usernames.split(",")
-    slugs = get_single_watchlist(username, all_usernames, user_profiles, recommender_instance)
-    # print(f"Time taken: {timer() - start}")
-
-    movies = retrieve_movies(slugs, float(minRating), float(maxRating), minRuntime, maxRuntime, minYear, maxYear, top_k=5)
-    return jsonify(movies)
-
-
-@app.route('/fetch_rewatchlist/<string:username>/<string:other_usernames>/<string:minRating>/<string:maxRating>/<int:minRuntime>/<int:maxRuntime>/<int:minYear>/<int:maxYear>', methods=['GET'])
-def fetch_rewatchlist(username, other_usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
-
-    start = timer()
-    other_usernames = other_usernames.split(",")
-    slugs = get_rewatchlist(username, other_usernames, user_profiles, recommender_instance)
-    # print(f"Time taken: {timer() - start}")
-
-    movies = retrieve_movies(slugs, float(minRating), float(maxRating), minRuntime, maxRuntime, minYear, maxYear, top_k=10)
-    return jsonify(movies)
-
-
-################ Fetch data for all categories of recommendations ################
-@app.route('/fetch_recommendations/<string:usernames>/<string:selectedCategory>/<string:minRating>/<string:maxRating>/<int:minRuntime>/<int:maxRuntime>/<int:minYear>/<int:maxYear>', methods=['GET'])
-def fetch_recommendations(usernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
-
-    start = timer()
-    usernames = usernames.split(",")
-
-    scores_dict = None
-    top_k = 1
-
-    if selectedCategory == "recommendations":
-        slugs, scores_dict = recommender_instance.get_recommendations(usernames, user_profiles, amount=5000)
-        top_k = 50
-    elif selectedCategory == "watchlist":
-        slugs = get_common_watchlist(usernames, user_profiles, recommender_instance)
-        top_k = 1000
-    elif selectedCategory == "rewatches":
-        slugs = get_rewatchlist(usernames, user_profiles)
-        top_k = 50
-    else:
-        return jsonify({"error": "Invalid category"}), 400
-
-    movies = retrieve_movies(slugs, float(minRating), float(maxRating), minRuntime, maxRuntime, minYear, maxYear, top_k=top_k, scores=scores_dict)
-    print(f"Time taken getting recommendations and retrieving: {timer() - start}")
-    return jsonify(movies)
-
-
 @app.route('/fetch_similar_movies/<string:slug>/<string:minRating>/<string:maxRating>/<int:minRuntime>/<int:maxRuntime>/<int:minYear>/<int:maxYear>', methods=['GET'])
 def fetch_similar_movies(slug, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
 
     start = timer()
-    hits, similar_movies = recommender_instance.get_similar_movies(slug, top_n=5)
+    hits, similar_movies = recommender.get_similar_movies(slug, top_n=5)
     if hits == False:
         return jsonify({"success": False, "message": "No similar movies found", "movies": []})  # Return a valid response with a flag
     # print(f"Time taken: {timer() - start}")
@@ -266,7 +214,7 @@ def fetch_similar_movies(slug, minRating, maxRating, minRuntime, maxRuntime, min
 @app.route('/fetch_explanation/<string:username>/<string:slug>', methods=['GET'])
 def fetch_explanation(username, slug):
     start = timer()
-    hits, influential_movies = recommender_instance.get_influential_movies(username, user_profiles, slug)
+    hits, influential_movies = recommender.get_influential_movies(username, user_profiles, slug)
     if hits == False:
         return jsonify({"success": False, "message": "No similar movies found", "movies": []})  # Return a valid response with a flag
     # print(f"Time taken: {timer() - start}")
@@ -277,9 +225,9 @@ def fetch_explanation(username, slug):
     return jsonify({"success": True, "message": "Influential movies found", "username": username, "movies": movies})
 
 
-############### Fetch data for blacklists ################
+############### HANDLE BLACKLISTS ################
 @app.route('/fetch_blacklists/<string:usernames>', methods=['GET'])
-def get_blacklists(usernames):
+def fetch_blacklists(usernames):
     usernames = usernames.split(",")
     user_blacklists = {}
     for username in usernames:
@@ -289,7 +237,6 @@ def get_blacklists(usernames):
             user_blacklists[username] = movies_bl
         else:
             return jsonify({"error": f"User {username} not found"}), 404
-
     return jsonify(user_blacklists)
 
 

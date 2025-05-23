@@ -1,10 +1,11 @@
 // global list of all users
 let allUsers = [];
+let selectedUsernames = [];
 
 ////////////////////////////////////////// Fetch User Data //////////////////////////////////////////
 async function fetchUserData(username) {
     try {
-        const response = await fetch(`/get_user/${username}`);
+        const response = await fetch(`/init_user/${username}`);
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
 
@@ -15,7 +16,7 @@ async function fetchUserData(username) {
         createUserCard(username, data);
 
         // Fetch extended user data
-        const response2 = await fetch(`/get_user_data/${username}`);
+        const response2 = await fetch(`/fetch_user_data/${username}`);
         if (!response2.ok) throw new Error("Could not fetch user data");
         const data2 = await response2.json();
         console.log(data2);
@@ -27,11 +28,14 @@ async function fetchUserData(username) {
         // Swap spinner for close button
         const spinner = document.getElementById(`spinner-${username}`);
         const closeBtn = document.getElementById(`close-btn-${username}`);
+        const toggleIcon = document.getElementById(`toggle-icon-${username}`);
         if (spinner) spinner.classList.add('d-none');
         if (closeBtn) closeBtn.classList.remove('d-none');
+        if (toggleIcon) toggleIcon.classList.remove('d-none');
 
         // Add user object to allUsers list
         allUsers.push(data);
+        selectedUsernames.push(data.username);
 
         const category = getSelectedCategory();
         await Recommend(category);
@@ -41,6 +45,8 @@ async function fetchUserData(username) {
         document.getElementById("enterUsernameHeader").textContent = "User not found: ";
     }
 }
+
+
 
 function createUserCard(username, user) {
     const col = document.createElement("div");
@@ -63,13 +69,20 @@ function createUserCard(username, user) {
                     </div>
                 </div>
 
-                <!-- Right: Spinner or Close Button -->
+                <!-- Right: Spinner, Toggle Icon, Close -->
                 <div class="d-flex align-items-center justify-content-end">
                     <div id="spinner-${username}">
                         <div class="spinner-border text-secondary" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
+                    <i 
+                        class="bi bi-eye ms-3 toggle-icon text-neon-green d-none"
+                        id="toggle-icon-${username}" 
+                        data-username="${username}"
+                        title="Toggle Selection"
+                        style="cursor: pointer; font-size: 1.6rem;"
+                    ></i>
                     <button 
                         type="button"
                         class="btn-close ms-3 d-none" 
@@ -83,7 +96,7 @@ function createUserCard(username, user) {
     `;
     document.getElementById("userRow").appendChild(col);
 
-    // Add close button listener (will be revealed after loading)
+    // Close button logic
     const closeBtn = col.querySelector(`#close-btn-${username}`);
     if (closeBtn) {
         closeBtn.addEventListener('click', async (e) => {
@@ -92,18 +105,44 @@ function createUserCard(username, user) {
             if (cardToRemove) {
                 cardToRemove.remove();
                 allUsers = allUsers.filter(user => user.username !== usernameToRemove);
+                selectedUsernames = selectedUsernames.filter(u => u !== usernameToRemove);
 
                 if (allUsers.length > 0) {
                     const category = getSelectedCategory();
                     await Recommend(category);
-                }
-                else {
+                } else {
                     document.getElementById("contentContainer").classList.add('d-none');
                 }
             }
         });
     }
+
+    // Toggle selection logic
+    const toggleIcon = col.querySelector(`#toggle-icon-${username}`);
+    if (toggleIcon) {
+        toggleIcon.addEventListener('click', async () => {
+            const isSelected = selectedUsernames.includes(username);
+
+            if (isSelected) {
+                selectedUsernames = selectedUsernames.filter(u => u !== username);
+                toggleIcon.classList.remove("text-neon-green");
+                toggleIcon.classList.replace("bi-eye", "bi-eye-slash");
+            } else {
+                selectedUsernames.push(username);
+                toggleIcon.classList.add("text-neon-green");
+                toggleIcon.classList.replace("bi-eye-slash", "bi-eye");
+            }
+
+            console.log("Selected users:", selectedUsernames);
+            const category = getSelectedCategory();
+            await Recommend(category);
+
+
+        });
+    }
 }
+
+
 
 async function InitializeAndTrain() {
     try {
@@ -135,34 +174,40 @@ async function Recommend(selectedCategory) {
 
     // Get filter settings
     const { minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear } = GetFilterSettings();
-    const activeUsernames = getActiveUsernames();
+    const allUsernames = getAllUsernames();
     
     // Get Recommendations
-    await FetchAndCreateRecommendationCards(activeUsernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
+    await FetchAndCreateRecommendationCards(allUsernames, selectedUsernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
 
     document.getElementById("contentContainer").classList.remove('d-none');
     document.getElementById("go-spinner").style.display = "none"; // Hide loading spinner
 
 }
 
-function getActiveUsernames() {
-    const allUsersNow = allUsers.map(user => user.username);
-    return allUsersNow;
+function getAllUsernames() {
+    const allUsernames = allUsers.map(user => user.username);
+    return allUsernames;
 }
 
 
-async function FetchAndCreateRecommendationCards(usernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
+async function FetchAndCreateRecommendationCards(allUsernames, selectedUsernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
     try {
 
-        if (usernames.length === 0) {
+        if (allUsernames.length === 0) {
             console.error("No users selected for recommendations.");
             const realRecommendContent = document.getElementById("RecommendedCardsContainer");
             realRecommendContent.innerHTML = "";  // Clear content efficiently
             return;
         }
 
+        if (selectedUsernames.length === 0) {
+            const realRecommendContent = document.getElementById("RecommendedCardsContainer");
+            realRecommendContent.innerHTML = "";
+            return;
+        }
+
         // You can join them with commas (or however your backend expects)
-        const response = await fetch(`/fetch_recommendations/${usernames.join(",")}/${selectedCategory}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
+        const response = await fetch(`/fetch_recommendations/${allUsernames.join(",")}/${selectedUsernames.join(",")}/${selectedCategory}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
         if (!response.ok) throw new Error("Something went wrong getting recommendations");
         const data = await response.json();
 
@@ -211,8 +256,6 @@ async function FetchAndCreateRecommendationCards(usernames, selectedCategory, mi
                 card.querySelector(".blacklist-btn").classList.add("d-none");
             });
 
-
-
             const btn = card.querySelector('.blacklist-btn');
             if (btn) {
                 btn.addEventListener('click', async (e) => {
@@ -247,7 +290,7 @@ async function FetchAndCreateRecommendationCards(usernames, selectedCategory, mi
 ////////////////////////////////////////////// Explain Movie (currently not used) //////////////////////////////////////////
 async function explainMovie(slug, title, year) {
 
-    usernames = getActiveUsernames();
+    usernames = getAllUsernames();
     console.log(`Explain movie with slug ${slug} for users: ${usernames}`);
 
     let description = "";
@@ -274,88 +317,6 @@ async function explainMovie(slug, title, year) {
     let modal = new bootstrap.Modal(document.getElementById("explainModal"));
     modal.show();
 }
-
-
-
-
-async function FetchAndCreateRecommendationCardsOLD(usernames, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
-    try {
-
-        if (usernames.length === 0) {
-            console.error("No users selected for recommendations.");
-            const realRecommendContent = document.getElementById("RecommendContainerReal");
-            realRecommendContent.innerHTML = "";  // Clear content efficiently
-            return;
-        }
-
-        // You can join them with commas (or however your backend expects)
-        const response = await fetch(`/fetch_recommendations/${usernames.join(",")}/${minRating}/${maxRating}/${minRuntime}/${maxRuntime}/${minYear}/${maxYear}`);
-        if (!response.ok) throw new Error("Something went wrong getting recommendations");
-        const data = await response.json();
-
-        const weight = 0;
-
-        const realRecommendContent = document.getElementById("RecommendContainerReal");
-        realRecommendContent.innerHTML = "";  // Clear content efficiently
-
-        const fragment = document.createDocumentFragment(); // Create a Document Fragment
-
-        let index = 0;
-        data.forEach(movie => {
-            index += 1;
-
-            // Create a new div for each movie and append to the fragment
-            const movieElement = document.createElement("div");
-            movieElement.classList.add("row");
-            movieElement.innerHTML = `
-                <div class="col-auto align-items-center d-flex justify-content-end" style="width: 50px;">
-                    <h5 class="text-end">${index}.</h5>
-                </div>
-
-                <div class="col">
-                    <div class="card rec-card open-movie-modal mb-3" slug="${movie.slug}">
-                        <div class="row g-0" >
-                            <div class="col-auto">
-                                <img src="${movie.poster}" class="rec-card-img rounded-start" alt="${movie.title}" slug="${movie.slug}">
-                            </div>
-
-                            <div class="col">
-                                <div class="card-body" slug="${movie.slug}">
-                                    <h5 class="card-title">${movie.title} (${movie.year})</h5>
-                                    <h5 class="text-top text-score p">${movie.score}%</h5>
-                                </div>
-                            </div>
-                            <div class="col-auto p-2 align-items-center  d-flex flex-column justify-content-center" style="margin-right: 20px;">
-
-                                <button 
-                                    type="button"
-                                    class="btn-close"
-                                    aria-label="Blacklist"
-                                    id="blacklist_${movie.slug}_${weight}_${index}"
-                                    data-slug="${movie.slug}"
-                                    data-title="${movie.title}"
-                                    data-year="${movie.year}"
-                                    data-weight="${weight}">
-                                </button>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            fragment.appendChild(movieElement);
-        });
-
-        // Append all movie elements to the DOM in one go
-        realRecommendContent.appendChild(fragment);
-
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 
 
 
