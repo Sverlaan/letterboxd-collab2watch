@@ -232,8 +232,11 @@ def get_common_watchlist(allUsernames, selectedUsernames, user_profiles, recomme
     for username in selectedUsernames[1:]:
         common_slugs = common_slugs.intersection(user_profiles[username].get_watchlist())
 
-    # Filter only movies that are in the recommender model
-    # common_slugs = [slug for slug in common_slugs if slug in recommender.movies_trained_on]
+    # Only keep slugs that are in the recommender model, store remaining slugs
+    common_slugs_for_prediction = [slug for slug in common_slugs if slug in recommender.movies_trained_on]
+    slugs_not_known_to_model = set(common_slugs) - set(common_slugs_for_prediction)
+    common_slugs = common_slugs_for_prediction
+    # If no common slugs, return empty list
     if not common_slugs:
         return []
 
@@ -252,6 +255,11 @@ def get_common_watchlist(allUsernames, selectedUsernames, user_profiles, recomme
 
     # Sort by average rating
     avg_preds.sort(key=lambda x: x[1], reverse=True)
+
+    # Append slugs not known to the model with a -1 rating at the end
+    # Needed, since the whole watchlist is displayed in the UI
+    for slug in slugs_not_known_to_model:
+        avg_preds.append((slug, -1))
 
     # Return sorted list of slugs
     return [slug for slug, _ in avg_preds]
@@ -273,8 +281,13 @@ def get_rewatchlist(allUsernames, selectedUsernames, user_profiles, recommender)
     for ratings in user_ratings.values():
         common_slugs.intersection_update(ratings.keys())
 
-    # Filter only movies that are in the recommender model
-    common_slugs = [slug for slug in common_slugs if slug in recommender.movies_trained_on]
+    # Only keep slugs that are in the recommender model, store remaining slugs
+    common_slugs_for_prediction = [slug for slug in common_slugs if slug in recommender.movies_trained_on]
+    slugs_not_known_to_model = set(common_slugs) - set(common_slugs_for_prediction)
+    common_slugs = common_slugs_for_prediction
+    # If no common slugs, return empty list
+    if not common_slugs:
+        return []
 
     # Filter out slugs that the non-selected users have seen
     all_seen_slugs = set()
@@ -305,7 +318,10 @@ def get_rewatchlist(allUsernames, selectedUsernames, user_profiles, recommender)
     # Sort by average rating
     avg_preds.sort(key=lambda x: x[1], reverse=True)
 
-    print("Rewatchlist average predictions:", avg_preds[:10])
+    # # Append slugs not known to the model with a -1 rating at the end
+    # # Not really needed, since only the top k will be displayed in the UI
+    # for slug in slugs_not_known_to_model:
+    #     avg_preds.append((slug, -1))
 
     # Return sorted list of slugs
     return [slug for slug, _ in avg_preds]

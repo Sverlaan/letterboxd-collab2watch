@@ -56,6 +56,9 @@
 .text-score {
   color: gold !important;
 }
+.text-normal {
+  color: #adb5bd !important; /* Slightly different gold for contrast */
+}
 
 
 /* To remove spacing between elements */

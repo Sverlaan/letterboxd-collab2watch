@@ -86,14 +86,14 @@ async function CreateModal(movie) {
     let userScoresHtml = `
         <div class="row g-3 mt-1 justify-content-start flex-nowrap overflow-auto no-scrollbar" style="white-space: nowrap;" id="userScoresRow">
             <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
-                <h5 class="text-center mb-2 text-muted">${movie.rating}</h5>
+                <h5 class="text-center mb-2 text-normal">${movie.rating}</h5>
                 <img src="${letterboxd_logo}" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-muted text-center"><small>Letterboxd</small></p>
+                <p class="text-normal text-center"><small>Letterboxd</small></p>
             </div>
             <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
                 <h5 class="text-center mb-2 ${movie.score_combined_color}">${movie.score_combined}</h5>
                 <img src="https://cdn-icons-png.flaticon.com/512/718/718339.png" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-muted text-center"><small>Combined</small></p>
+                <p class="text-normal text-center"><small>Combined</small></p>
             </div>
     `;
 
@@ -103,9 +103,9 @@ async function CreateModal(movie) {
 
         userScoresHtml += `
             <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
-                <h5 class="text-center mb-2 ${scoreData ? scoreData.score_color : 'text-muted'}">${scoreData ? scoreData.score : '--'}</h5>
+                <h5 class="text-center mb-2 ${scoreData ? scoreData.score_color : 'text-normal'}">${scoreData ? scoreData.score : '--'}</h5>
                 <img src="${user.avatar}" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-muted text-center"><small>${user.name}</small></p>
+                <p class="text-normal text-center"><small>${user.name}</small></p>
             </div>
         `;
     }

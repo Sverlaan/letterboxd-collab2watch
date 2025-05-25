@@ -175,15 +175,16 @@ def fetch_movie_data_for_modal(slug, usernames):
         })
 
     # Calculate combined score (average of available numeric scores)
-    valid_scores = [user["numeric_score"] for user in all_scores if user["numeric_score"] is not None]
-    if valid_scores:
+    # valid_scores = [user["numeric_score"] for user in all_scores if user["numeric_score"] is not None]
+    # print(f"Valid scores: {valid_scores}")
+    if not None in [user["numeric_score"] for user in all_scores]:
         sum_total = 0
         for user in all_scores:
             if user["score_color"] == "text-score":
                 sum_total += user["numeric_score"]
             else:
                 sum_total += user["numeric_score"] * 20.0
-        avg_score = sum_total / len(valid_scores)
+        avg_score = sum_total / len(all_scores)
         movie_data["score_combined"] = f"{round(avg_score, 1)}%"
         movie_data["score_combined_color"] = "text-score"
     else:
