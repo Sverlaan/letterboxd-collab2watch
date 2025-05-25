@@ -193,16 +193,26 @@ function getAllUsernames() {
 async function FetchAndCreateRecommendationCards(allUsernames, selectedUsernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear) {
     try {
 
+        const errorContainer = document.getElementById("ErrorMessage");
+
         if (allUsernames.length === 0) {
             console.error("No users selected for recommendations.");
             const realRecommendContent = document.getElementById("RecommendedCardsContainer");
-            realRecommendContent.innerHTML = "";  // Clear content efficiently
+            realRecommendContent.innerHTML = ""
             return;
         }
 
         if (selectedUsernames.length === 0) {
             const realRecommendContent = document.getElementById("RecommendedCardsContainer");
+            // Add header text
             realRecommendContent.innerHTML = "";
+            errorContainer.innerHTML = `
+                <div class="alert alert-warning" role="alert">
+                    Please select at least one user to get recommendations.
+                </div>
+            `;
+            errorContainer.style.display = "block"; // Show error message
+
             return;
         }
 
@@ -213,6 +223,17 @@ async function FetchAndCreateRecommendationCards(allUsernames, selectedUsernames
 
         const realRecommendContent = document.getElementById("RecommendedCardsContainer");
         realRecommendContent.innerHTML = "";  // Clear content efficiently
+
+        if (data.length === 0) {
+            errorContainer.innerHTML = `
+                <div class="alert alert-info" role="alert">
+                    No results found for the selected users and filters.
+                </div>
+            `;
+            errorContainer.style.display = "block"; // Show error message
+            return;
+        }
+        errorContainer.style.display = "none"; // Hide error message if data is found
 
         const fragment = document.createDocumentFragment(); // Create a Document Fragment
 
