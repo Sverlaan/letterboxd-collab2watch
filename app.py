@@ -175,8 +175,6 @@ def fetch_movie_data_for_modal(slug, usernames):
         })
 
     # Calculate combined score (average of available numeric scores)
-    # valid_scores = [user["numeric_score"] for user in all_scores if user["numeric_score"] is not None]
-    # print(f"Valid scores: {valid_scores}")
     if not None in [user["numeric_score"] for user in all_scores]:
         sum_total = 0
         for user in all_scores:
@@ -204,7 +202,6 @@ def fetch_similar_movies(slug, minRating, maxRating, minRuntime, maxRuntime, min
     hits, similar_movies = recommender.get_similar_movies(slug, top_n=5)
     if hits == False:
         return jsonify({"success": False, "message": "No similar movies found", "movies": []})  # Return a valid response with a flag
-    # print(f"Time taken: {timer() - start}")
 
     movies = retrieve_movies(similar_movies, top_k=5)
 
@@ -217,7 +214,6 @@ def fetch_explanation(username, slug):
     hits, influential_movies = recommender.get_influential_movies(username, user_profiles, slug)
     if hits == False:
         return jsonify({"success": False, "message": "No similar movies found", "movies": []})  # Return a valid response with a flag
-    # print(f"Time taken: {timer() - start}")
 
     # Append slug to influential movies
     movies = retrieve_movies(influential_movies, top_k=-1)

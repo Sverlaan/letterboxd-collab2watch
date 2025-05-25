@@ -38,7 +38,7 @@ document.body.addEventListener("click", async function (event) {
 
         if (!data.success)
         {
-            console.log("No similar movies found");
+            console.log(`No similar movies found for ${movie.slug}`);
             document.getElementById("similarMoviesContainer").classList.add('d-none');
         } 
         else {

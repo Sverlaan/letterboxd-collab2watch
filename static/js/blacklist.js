@@ -33,7 +33,6 @@ async function blacklistMovie(slug, title, year) {
         const username = allUsers[0].username;
 
         try {
-            console.log(`Adding ${slug} to ${username}'s blacklist...`);
             const response = await fetch(`/add_to_blacklist/${username}/${slug}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }

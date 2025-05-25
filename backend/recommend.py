@@ -366,33 +366,3 @@ def get_rewatchlistOLD(username1, other_usernames, user_profiles, recommender):
     avg_preds.sort(key=lambda x: x[1], reverse=True)
 
     return [slug for slug, _ in avg_preds]
-
-
-# if __name__ == '__main__':
-
-#     username = "flrz"
-
-#     user_profiles = {
-#         username: UserProfile(username)
-#     }
-
-#     recommender = MovieRecommender(model_path="model/kernel_mf.pkl")
-#     recommender.preprocess([username], user_profiles)
-#     recommender.train_model(n_epochs=30, lr=0.001)
-
-#     print(recommender.explain([username], user_profiles, "witness-for-the-prosecution-1957", 0))
-
-    # print(get_similar_movies("kikis-delivery-service", recommender))
-
-    # Get recommendations
-    # user_test = 'liannehr'
-    # items_known = recommender.X_update.query("user_id == @user_test")["item_id"]
-    # recs = recommender.model.recommend(user=user_test, items_known=items_known, amount=10)
-    # print(recs)
-
-    # res = recommender.get_recommendations("liannehr", "sverlaan", 0, user_profiles, recommender)
-    # print(res)
-
-    # Get predictions
-    # print(recommender.get_prediction("liannehr", ["twin-peaks-the-return", "portrait-of-a-lady-on-fire"]))
-    # print(recommender.get_prediction("liannehr", "portrait-of-a-lady-on-fire"))

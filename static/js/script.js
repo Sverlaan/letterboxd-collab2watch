@@ -19,7 +19,6 @@ async function fetchUserData(username) {
         const response2 = await fetch(`/fetch_user_data/${username}`);
         if (!response2.ok) throw new Error("Could not fetch user data");
         const data2 = await response2.json();
-        console.log(data2);
 
         // Update stats text
         const statsEl = document.getElementById(`user-stats-${username}`);
@@ -132,12 +131,8 @@ function createUserCard(username, user) {
                 toggleIcon.classList.add("text-neon-green");
                 toggleIcon.classList.replace("bi-eye-slash", "bi-eye");
             }
-
-            console.log("Selected users:", selectedUsernames);
             const category = getSelectedCategory();
             await Recommend(category);
-
-
         });
     }
 }
@@ -163,12 +158,8 @@ async function InitializeAndTrain() {
 
 async function Recommend(selectedCategory) {
 
-    console.log("Selected category:", selectedCategory);
-
     document.getElementById("go-spinner").style.display = "block"; // Show loading spinner
     //document.getElementById("contentContainer").classList.add('d-none');
-
-    console.log("Get recs for active usernames: " + allUsers.map(user => user.username));
 
     await InitializeAndTrain();
 
@@ -312,7 +303,6 @@ async function FetchAndCreateRecommendationCards(allUsernames, selectedUsernames
 async function explainMovie(slug, title, year) {
 
     usernames = getAllUsernames();
-    console.log(`Explain movie with slug ${slug} for users: ${usernames}`);
 
     let description = "";
 

@@ -5,7 +5,6 @@ document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.add('active');
 
         const selectedCategory = btn.dataset.category;
-        console.log("Selected:", selectedCategory);
 
         // Change id="categoryText" to the selected category
         const categoryText = document.getElementById('categoryText');
@@ -57,14 +56,12 @@ document.getElementById('resetFilters').addEventListener('click', async function
     document.getElementById('maxYear').value = 2025;
 
     const category = getSelectedCategory();
-    console.log("Selected for reset filters:", category);
     await Recommend(category);
 });
 
 document.getElementById('applyFilters').addEventListener('click', async function (event) {
 
     const category = getSelectedCategory();
-    console.log("Selected for reset filters:", category);
     await Recommend(category);
 });
 
