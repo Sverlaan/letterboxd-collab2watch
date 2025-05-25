@@ -31,7 +31,7 @@ else:
 print(f"Model path: {model_path}")
 
 # Initialize global variables
-DEBUG_MODE = True
+DEBUG_MODE = False
 user_profiles = dict()
 recommender = None
 
