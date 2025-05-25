@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify
 from timeit import default_timer as timer
 import threading
 from backend.movie import db, Movie, retrieve_movies
-from backend.recommend import MovieRecommender, get_common_watchlist, get_single_watchlist, get_rewatchlist
+from backend.recommend import MovieRecommender, get_common_watchlist, get_rewatchlist
 from backend.user import UserProfile
 import os
 
@@ -114,19 +114,18 @@ def fetch_recommendations(allUsernames, selectedUsernames, selectedCategory, min
 
     start = timer()
     allUsernames = allUsernames.split(",")
-
-    # TODO: Use selectedUsernames for each category as intended
     selectedUsernames = selectedUsernames.split(",")
 
     scores_dict = None
     top_k = 50
 
     if selectedCategory == "recommendations":
-        slugs, scores_dict = recommender.get_recommendations(allUsernames, user_profiles, amount=5000)
+        slugs, scores_dict = recommender.get_recommendations(selectedUsernames, user_profiles, amount=5000)
     elif selectedCategory == "watchlist":
-        slugs = get_common_watchlist(allUsernames, user_profiles, recommender)
+        slugs = get_common_watchlist(allUsernames, selectedUsernames, user_profiles, recommender)
+        top_k = 1000  # Increase top_k for watchlist to get more results
     elif selectedCategory == "rewatches":
-        slugs = get_rewatchlist(allUsernames, user_profiles)
+        slugs = get_rewatchlist(allUsernames, selectedUsernames, user_profiles, recommender)
     else:
         return jsonify({"error": "Invalid category"}), 400
 

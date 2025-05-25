@@ -10,13 +10,13 @@ document.querySelectorAll('.category-btn').forEach(btn => {
         // Change id="categoryText" to the selected category
         const categoryText = document.getElementById('categoryText');
         if (selectedCategory === 'recommendations') {
-            categoryText.innerHTML = "Combined and personalized recommendations for movies you have not seen!<br>Use the blacklist functionality to dismiss any suggestions and tune the recommendations.";
+            categoryText.innerHTML = "Recommendations for movies the selected users have not seen!<br>Use the blacklist functionality to dismiss any suggestions and tune the recommendations.";
         }
         else if (selectedCategory === 'watchlist') {
-            categoryText.innerHTML = "Movies you want to watch!<br>This is the common watchlist of all selected users.";
+            categoryText.innerHTML = "This is the common watchlist of all selected users!<br>The movies are sorted by the predicted ratings of all users in the group.";
         }
         else if (selectedCategory === 'rewatches') {
-            categoryText.innerHTML = "Movies you might want to rewatch!<br>These are movies the selected users have already seen.";
+            categoryText.innerHTML = "Movies the selected users have already seen but might want to rewatch!<br>The movies are sorted by the predicted ratings of the non-selected users in the group.";
         }
         else {
             categoryText.innerHTML = "TODO TEXT HERE";
