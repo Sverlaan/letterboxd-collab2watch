@@ -12,18 +12,15 @@
   <body>
 
     <div class="d-flex" style="height: 100vh; overflow: hidden;">
+
+        <!-- Mobile-Only Sidebar Toggle Button -->
+        <button id="sidebarToggle" class="btn btn-secondary position-fixed top-0 start-0 m-3 d-md-none" style="width: 50pt; font-size: 18pt; z-index: 2000;">
+            <i class="bi bi-list" id="sidebarToggleIcon"></i>
+        </button>
+  
+          
     
         <div id="sidebar" class="bg-secondary-subtle left-scrollable" style="width: 500px; min-width: 300px; max-width: 800px; overflow-y: auto; overflow-x: hidden;">
-
-            <!-- Top-Right Theme Toggle -->
-            <div class="position-absolute top-0 end-0 m-3">
-                <div class="d-flex align-items-center gap-2">
-                  <div id="go-spinner" class="spinner-border text-secondary" style="display:none; width: 40px; height: 40px;"></div>
-                  <button class="btn btn-outline-secondary" style="width: 50pt; font-size: 18pt" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
-                    <i class="bi bi-moon-stars" id="theme-icon"></i>
-                  </button>
-                </div>
-            </div>
               
         
             <h1 class="text-center mt-5">Collab2Watch</h1>
@@ -180,7 +177,17 @@
 
         <div class="col" style="overflow-y: auto;">
 
-            
+            <!-- Top-Right Theme Toggle -->
+            <div class="position-absolute top-0 end-0 m-3">
+                <div class="d-flex align-items-center gap-2">
+                    <div id="go-spinner" class="spinner-border text-secondary" style="display:none; width: 40px; height: 40px;"></div>
+                    <button class="btn btn-secondary" style="width: 50pt; font-size: 18pt" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
+                    <i class="bi bi-moon-stars" id="theme-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <h1 class="text-center mt-5">Collab2Watch</h1>
         
             <!-- Parent container for all the content -->
             <div class="container-fluid d-none w-75" id="contentContainer">    

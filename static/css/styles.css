@@ -154,3 +154,50 @@
     -moz-user-select: none;
     -ms-user-select: none;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Base transition */
+#sidebar {
+    transition: transform 0.3s ease;
+    will-change: transform;
+  }
+  
+  /* Slide sidebar out of view */
+  #sidebar.slide-hidden {
+    transform: translateX(-100%);
+  }
+  
+  /* Slide sidebar into view */
+  #sidebar.slide-visible {
+    transform: translateX(0%);
+  }
+  
+  /* Mobile-specific sidebar style */
+  @media (max-width: 767.98px) {
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100% !important;
+      z-index: 1050;
+      overflow-y: auto;
+    }
+  
+    #resizer {
+      display: none !important;
+    }
+  }
+  

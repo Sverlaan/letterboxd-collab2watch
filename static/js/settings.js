@@ -74,30 +74,72 @@ document.getElementById('usernameForm').addEventListener('submit', function (eve
     document.getElementById('inputUsername').value = "";
 });
 
-// For resizing the sidebar
-const resizer = document.getElementById('resizer');
+
+
 const sidebar = document.getElementById('sidebar');
-let isResizing = false;
+const resizer = document.getElementById('resizer');
+const toggleButton = document.getElementById('sidebarToggle');
+const toggleIcon = document.getElementById('sidebarToggleIcon');
 
-resizer.addEventListener('mousedown', function (e) {
-  isResizing = true;
-  document.body.style.cursor = 'ew-resize';
-  document.body.classList.add('no-select'); // 👈 prevent text selection
-});
+let sidebarVisible = true;
 
-document.addEventListener('mousemove', function (e) {
-  if (!isResizing) return;
+function updateSidebarState(show) {
+  sidebarVisible = show;
 
-  const newWidth = e.clientX;
-  if (newWidth > 300 && newWidth < 800) {
-    sidebar.style.width = newWidth + 'px';
+  if (window.innerWidth < 768) {
+    sidebar.classList.toggle('slide-visible', show);
+    sidebar.classList.toggle('slide-hidden', !show);
+    document.body.classList.toggle('mobile-open', show);
+
+    // Icon change
+    toggleIcon.className = show ? 'bi bi-x-lg' : 'bi bi-list';
+  } else {
+    // On desktop, always show sidebar and enable resizer
+    sidebar.classList.remove('slide-hidden', 'slide-visible');
+    document.body.classList.remove('mobile-open');
+    if (resizer) resizer.style.display = 'block';
+  }
+}
+
+toggleButton.addEventListener('click', () => {
+  if (window.innerWidth < 768) {
+    updateSidebarState(!sidebarVisible);
   }
 });
 
-document.addEventListener('mouseup', function () {
-  if (isResizing) {
-    isResizing = false;
-    document.body.style.cursor = 'default';
-    document.body.classList.remove('no-select'); // 👈 re-enable text selection
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 768) {
+    updateSidebarState(true); // always visible on desktop
   }
 });
+
+// Initial state setup
+updateSidebarState(window.innerWidth >= 768);
+
+
+
+// For resizing the sidebar
+// let isResizing = false;
+
+// resizer.addEventListener('mousedown', function (e) {
+//   isResizing = true;
+//   document.body.style.cursor = 'ew-resize';
+//   document.body.classList.add('no-select'); // 👈 prevent text selection
+// });
+
+// document.addEventListener('mousemove', function (e) {
+//   if (!isResizing) return;
+
+//   const newWidth = e.clientX;
+//   if (newWidth > 300 && newWidth < 800) {
+//     sidebar.style.width = newWidth + 'px';
+//   }
+// });
+
+// document.addEventListener('mouseup', function () {
+//   if (isResizing) {
+//     isResizing = false;
+//     document.body.style.cursor = 'default';
+//     document.body.classList.remove('no-select'); // 👈 re-enable text selection
+//   }
+// });
