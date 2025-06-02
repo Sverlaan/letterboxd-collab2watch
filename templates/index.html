@@ -22,7 +22,7 @@
         <div class="position-absolute top-0 end-0 m-3">
             <div class="d-flex align-items-center gap-2">
                 <div id="go-spinner" class="spinner-border text-secondary" style="display:none; width: 40px; height: 40px;"></div>
-                <button class="btn btn-secondary" style="width: 50pt; font-size: 18pt" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
+                <button class="btn btn-secondary" style="width: 50pt; font-size: 18pt; z-index: 2000;" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
                 <i class="bi bi-moon-stars" id="theme-icon"></i>
                 </button>
             </div>
@@ -200,18 +200,17 @@
                 </div>
                   
         
-                <div class="container px-4 px-md-5 mb-5 mt-3" id="RecommendContainer">
+                <div class="container px-0 px-lg-5 mb-5 mt-3" id="RecommendContainer">
         
                     <p class="text-center text-muted no-spacing mb-5" id="categoryText">
                         Recommendations for movies the selected users have not seen!<br>Use the blacklist functionality to dismiss any suggestions and tune the recommendations.;
                     </p>
         
                     <div class="row 
-                                row-cols-2      <!-- Default (xs) -->
-                                row-cols-sm-3 
+                                row-cols-3     
                                 row-cols-xl-4 
                                 row-cols-xxl-5 
-                                g-1             <!-- Default gap -->
+                                g-1             
                                 g-sm-2 
                                 row-cols-xl-3
                                 g-xxl-4" 

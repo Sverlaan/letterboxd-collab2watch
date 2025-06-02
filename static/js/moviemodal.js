@@ -27,6 +27,8 @@ document.body.addEventListener("click", async function (event) {
 
         // Show the modal
         let modal = new bootstrap.Modal(document.getElementById("dynamicModal"));
+
+
         modal.show();
 
         // Get filter settings
@@ -114,7 +116,7 @@ async function CreateModal(movie) {
 
     let modalHtml = `
                 <div class="modal fade" id="dynamicModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down custom-modal">
+                <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down custom-modal" style="z-index: 5000;">
 
 
                     <div class="modal-content">
