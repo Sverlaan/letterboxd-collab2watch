@@ -106,12 +106,8 @@ function createUserCard(username, user) {
                 allUsers = allUsers.filter(user => user.username !== usernameToRemove);
                 selectedUsernames = selectedUsernames.filter(u => u !== usernameToRemove);
 
-                if (allUsers.length > 0) {
-                    const category = getSelectedCategory();
-                    await Recommend(category);
-                } else {
-                    document.getElementById("contentContainer").classList.add('d-none');
-                }
+                const category = getSelectedCategory();
+                await Recommend(category);
             }
         });
     }
@@ -170,7 +166,6 @@ async function Recommend(selectedCategory) {
     // Get Recommendations
     await FetchAndCreateRecommendationCards(allUsernames, selectedUsernames, selectedCategory, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear);
 
-    document.getElementById("contentContainer").classList.remove('d-none');
     document.getElementById("go-spinner").style.display = "none"; // Hide loading spinner
 
 }
@@ -190,6 +185,12 @@ async function FetchAndCreateRecommendationCards(allUsernames, selectedUsernames
             console.error("No users selected for recommendations.");
             const realRecommendContent = document.getElementById("RecommendedCardsContainer");
             realRecommendContent.innerHTML = ""
+            errorContainer.innerHTML = `
+                <div class="alert alert-warning" role="alert">
+                    Please add at least one user to get recommendations.
+                </div>
+            `;
+            errorContainer.style.display = "block"; // Show error message
             return;
         }
 

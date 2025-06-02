@@ -18,11 +18,16 @@
     --bs-warning-hover: #cc9a06; /* deeper amber, better contrast in dark mode */
 }
 
+.category-btn {
+    font-size: 32px;
+    font-weight: 100;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+}
+
 .category-btn.active {
     background-color: var(--bs-warning);
     color: var(--bs-black);
-    border-radius: 0.5rem;
-    font-size: 32px;
     font-weight: 300;
 }
 
@@ -35,6 +40,35 @@
     cursor: pointer;
     opacity: 0.5;
 }
+
+/* Layout: horizontal on larger screens */
+#category-toggle {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Stack vertically on small screens */
+@media (max-width: 768px) {
+    #category-toggle {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .category-btn {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+    }
+}
+
+.fixed-width-btn {
+    width: 200px; /* Adjust as needed to match */
+    text-align: center;
+}
+  
+
 
 /* Custom card for user cards */
 .user-card {
@@ -157,6 +191,13 @@
 
 
 
+/* Custom modal width for larger screens */
+@media (min-width: 768px) {
+    .custom-modal {
+      max-width: 50% !important; /* or 50% — your preference */
+    }
+}
+  
 
 
 
@@ -201,3 +242,11 @@
     }
   }
   
+
+
+
+
+#sidebarToggle, #theme-toggle, #theme-toggle-desktop {
+    font-size: 18pt;
+    width: 50pt;
+}

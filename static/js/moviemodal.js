@@ -113,10 +113,14 @@ async function CreateModal(movie) {
     userScoresHtml += `</div>`;
 
     let modalHtml = `
-        <div class="modal fade" id="dynamicModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 50%; width: 50%;">
-                <div class="modal-content">
+                <div class="modal fade" id="dynamicModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down custom-modal">
+
+
+                    <div class="modal-content">
                     <div class="modal-body p-0">
+
+
 
                         <!-- Background section (banner + user scores) -->
                         <div class="card position-relative text-white" style="
