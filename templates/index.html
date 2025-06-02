@@ -206,7 +206,18 @@
                         Recommendations for movies the selected users have not seen!<br>Use the blacklist functionality to dismiss any suggestions and tune the recommendations.;
                     </p>
         
-                    <div class="row row-cols-3 row-cols-md-5 g-4" id="RecommendedCardsContainer"></div>
+                    <div class="row 
+                                row-cols-2      <!-- Default (xs) -->
+                                row-cols-sm-3 
+                                row-cols-xl-4 
+                                row-cols-xxl-5 
+                                g-1             <!-- Default gap -->
+                                g-sm-2 
+                                row-cols-xl-3
+                                g-xxl-4" 
+                        id="RecommendedCardsContainer">
+                    </div>
+
 
 
                     <div class="text-center mt-4" id="ErrorMessage">
