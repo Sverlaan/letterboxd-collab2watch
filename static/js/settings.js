@@ -35,17 +35,13 @@ function getSelectedCategory() {
 
 // Hide toggle buttons when a modal is shown
 document.addEventListener('show.bs.modal', function (event) {
-    if (event.target.id === 'dynamicModal') {
-        document.getElementById('sidebarToggle').style.display = 'none';
-        document.getElementById('theme-toggle').style.display = 'none';
-    }
+    document.getElementById('sidebarToggle').style.display = 'none';
+    document.getElementById('theme-toggle').style.display = 'none';
 });
 
 document.addEventListener('hidden.bs.modal', function (event) {
-    if (event.target.id === 'dynamicModal') {
-        document.getElementById('sidebarToggle').style.display = '';
-        document.getElementById('theme-toggle').style.display = '';
-    }
+    document.getElementById('sidebarToggle').style.display = '';
+    document.getElementById('theme-toggle').style.display = '';
 });
 
 

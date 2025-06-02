@@ -108,6 +108,7 @@
 }
 .hover-zoom:hover {
     transform: scale(1.10);
+    z-index: 10; /* Bring to front */
 }
 
 /* For the edit blacklist button */
@@ -191,10 +192,9 @@
 
 
 
-/* Custom modal width for larger screens */
 @media (min-width: 768px) {
     .custom-modal {
-      max-width: 50% !important; /* or 50% — your preference */
+      max-width: 50% !important; 
     }
 }
   

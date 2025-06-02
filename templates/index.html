@@ -33,7 +33,7 @@
         <div id="sidebar" class="bg-secondary-subtle left-scrollable" style="width: 500px; min-width: 300px; max-width: 800px; overflow-y: auto; overflow-x: hidden;">
               
         
-            <h1 class="text-center mt-5">Collab2Watch</h1>
+            <h1 class="text-center mt-5">Settings</h1>
             <!-- <h4 class="text-center text-muted">Letterboxd Group Recommendations</h4> -->
     
 
@@ -154,7 +154,7 @@
 
                 <h5 class="text-center">Credits</h5>
 
-                <div class="text-left text-muted mb-5">
+                <div class="text-start text-muted mb-5">
                     <p>© 2025 Stianne. Check out the source code on <a href="https://github.com/Sverlaan/collab2watch.git" target="_blank">GitHub</a>.</p>
                     <p>This product uses the TMDB API but is not endorsed or certified by TMDB. This is also not an official Letterboxd product.</p>
 
@@ -180,7 +180,7 @@
 
 
         <!-- Resize Handle -->
-        <div id="resizer" class="bg-secondary-subtle" style="width: 5px; cursor: ew-resize;"></div>
+        <div id="resizer" class="bg-secondary-subtle" style="width: 0px; cursor: ew-resize;"></div>
 
 
 
@@ -191,8 +191,8 @@
             <div class="px-1 px-lg-2 px-xxl-5" id="contentContainer">    
 
                 <div class="text-center" style="margin-top: 2rem; min-height: 80px;">
-                    <h1 class="text-center mb-5 mt-5">Letterboxd Group Recommendations</h1>
-                    <div id="category-toggle" class="d-inline-flex gap-4">
+                    <h1 class="text-center mb-4 mb-md-5 mt-5">Collab2Watch</h1>
+                    <div id="category-toggle" class="d-inline-flex g-1 g-lg-2">
                       <button class="category-btn" data-category="watchlist">Watchlist</button>
                       <button class="category-btn active" data-category="recommendations">Recommendations</button>
                       <button class="category-btn" data-category="rewatches">Rewatches</button>
@@ -202,7 +202,7 @@
         
                 <div class="container mb-5 mt-3" id="RecommendContainer">
         
-                    <p class="text-center text-muted no-spacing mb-5" id="categoryText">
+                    <p class="text-center text-muted no-spacing d-none d-sm-block" id="categoryText">
                         Recommendations for movies the selected users have not seen!<br>Use the blacklist functionality to dismiss any suggestions and tune the recommendations.;
                     </p>
         
@@ -213,7 +213,8 @@
                                 g-1             
                                 g-sm-2 
                                 row-cols-xl-3
-                                g-xxl-4" 
+                                g-xxl-4
+                                mt-5" 
                         id="RecommendedCardsContainer">
                     </div>
 
@@ -254,7 +255,7 @@
 
 
     <!-- Blacklist Modal -->
-    <div class="modal fade" id="blacklistModal" tabindex="-1" aria-labelledby="blacklistModalLabel" aria-hidden="true">
+    <div class="modal fade" id="blacklistModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

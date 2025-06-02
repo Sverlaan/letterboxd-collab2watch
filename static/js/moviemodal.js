@@ -115,8 +115,9 @@ async function CreateModal(movie) {
     userScoresHtml += `</div>`;
 
     let modalHtml = `
-                <div class="modal fade" id="dynamicModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down custom-modal" style="z-index: 5000;">
+                <div class="modal fade" id="dynamicModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered w-100 w-sm-75 w-md-50 mx-auto custom-modal" style="z-index: 5000;">
+
 
 
                     <div class="modal-content">
@@ -150,19 +151,61 @@ async function CreateModal(movie) {
                                 </button>
 
                                 <div class="row g-3">
-                                    <div class="col-lg-3">
+                                    <!-- Poster -->
+                                    <div class="col-4 col-md-3">
                                         <img src="${movie.poster}" 
-                                            class="card card-img rounded" 
+                                            class="card card-img rounded img-fluid" 
                                             style="object-fit: contain;" 
                                             alt="${movie.title}">
                                     </div>
-                                    <div class="col-lg-9">
-                                        <a href="${movie.letterboxd_link}" class="text-decoration-none edit-blacklist-link" style="font-size: 1.6em; font-weight: bolder; color: white;" target="_blank" rel="noopener noreferrer">${movie.title} (${movie.year})</a>
-                                        <h6 class="card-subtitle mt-3 mb-2 text-light">${movie.runtime} mins | ${movie.genres}</h6> 
+
+                                    <!-- Text block: adapts layout based on screen size -->
+                                    <div class="col-8 col-md-9">
+                                        <!-- On small screens: show only title beside poster -->
+                                        <div class="d-block d-md-none mb-2">
+                                            <a href="${movie.letterboxd_link}" 
+                                            class="text-decoration-none edit-blacklist-link" 
+                                            style="font-size: 1.4em; font-weight: bolder; color: white;" 
+                                            target="_blank" rel="noopener noreferrer">
+                                            ${movie.title} (${movie.year})
+                                            </a>
+                                        </div>
+
+                                        <div class="d-block d-md-none mt-3">
+                                            <p class="card-text no-spacing text-light"><small>Director: ${movie.director}</small></p>
+                                            <p class="card-text no-spacing text-light"><small>Cast: ${movie.actors}</small></p>
+                                            <a href="${movie.trailer}" 
+                                            class="text-decoration-none text-light" 
+                                            target="_blank" rel="noopener noreferrer">
+                                            <small>Watch trailer</small>
+                                            </a>
+                                        </div>
+
+                                        <!-- On md+ screens: show full content including title -->
+                                        <div class="d-none d-md-block">
+                                            <a href="${movie.letterboxd_link}" 
+                                            class="text-decoration-none edit-blacklist-link" 
+                                            style="font-size: 1.6em; font-weight: bolder; color: white;" 
+                                            target="_blank" rel="noopener noreferrer">
+                                            ${movie.title} (${movie.year})
+                                            </a>
+                                            <h6 class="card-subtitle mt-3 mb-2 text-light">${movie.runtime} mins | ${movie.genres}</h6> 
+                                            <p class="card-text">${movie.description}</p>
+                                            <p class="card-text no-spacing text-light"><small>Director: ${movie.director}</small></p>
+                                            <p class="card-text no-spacing text-light"><small>Cast: ${movie.actors}</small></p>
+                                            <a href="${movie.trailer}" 
+                                            class="text-decoration-none text-light" 
+                                            target="_blank" rel="noopener noreferrer">
+                                            <small>Watch trailer</small>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- On small screens: show rest of content under poster+title -->
+                                    <div class="d-block d-md-none mt-3">
+                                        <h6 class="card-subtitle mb-2 text-light">${movie.runtime} mins | ${movie.genres}</h6> 
                                         <p class="card-text">${movie.description}</p>
-                                        <p class="card-text no-spacing text-light"><small>Director: ${movie.director}</small></p>
-                                        <p class="card-text no-spacing text-light"><small>Cast: ${movie.actors}</small></p>
-                                        <a href="${movie.trailer}" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer"><small>Watch trailer</small></a>
+                                        </a>
                                     </div>
                                 </div>
 
@@ -174,12 +217,12 @@ async function CreateModal(movie) {
                         </div>
 
                         <!-- Plain section for similar movies -->
-                        <div class="card-body">
-                            <div class="container-fluid" id="similarMoviesContainer">
-                                <div class="mt-2 w-100 p-2">
-                                    <div class="text-center text-muted fst-italic fs-4">Movies similar to ${movie.title}:</div>   
+                        <div class="card-body d-none d-sm-block">
+                            <div class="container-fluid p-2" id="similarMoviesContainer">
+                                <div class="mb-2 w-100">
+                                    <div class="text-center text-muted fst-italic fs-4">Similar movies:</div>   
                                 </div>
-                                <div class="row g-3 justify-content-evenly p-1 mb-3" id="similarMovies"></div>
+                                <div class="row g-1 g-lg-3 justify-content-evenly" id="similarMovies"></div>
                             </div>
                         </div>
 
