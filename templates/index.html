@@ -22,7 +22,7 @@
         <div class="position-absolute top-0 end-0 m-3">
             <div class="d-flex align-items-center gap-2">
                 <div id="go-spinner" class="spinner-border text-secondary" style="display:none; width: 40px; height: 40px;"></div>
-                <button class="btn btn-secondary" style="width: 50pt; font-size: 18pt; z-index: 2000;" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
+                <button class="btn btn-secondary position-fixed top-0 end-0 m-3" style="width: 50pt; font-size: 18pt; z-index: 2000;" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
                 <i class="bi bi-moon-stars" id="theme-icon"></i>
                 </button>
             </div>
@@ -43,10 +43,10 @@
         
                 <!-- Top: Username Form -->
                 <form class="d-flex justify-content-center align-items-center gap-2 p-2" id="usernameForm">
-                    <p id="enterUsernameHeader" style="font-size: 14pt" class="mb-0 text-muted">Letterboxd: </p>
+                    <!-- <p id="enterUsernameHeader" style="font-size: 14pt" class="mb-0 text-muted">Letterboxd: </p> -->
                     <input type="text" class="form-control"
                     id="inputUsername"
-                    placeholder="Username"
+                    placeholder="Letterboxd username"
                     autocomplete="off"
                     style="font-size: 14pt;">
                     <button type="submit"
@@ -200,9 +200,9 @@
                 </div>
                   
         
-                <div class="container mb-5 mt-3" id="RecommendContainer">
+                <div class="container mb-5" id="RecommendContainer">
         
-                    <p class="text-center text-muted no-spacing d-none d-sm-block" id="categoryText">
+                    <p class="text-center text-muted no-spacing mt-4 d-none d-sm-block" id="categoryText">
                         Recommendations for movies the selected users have not seen!<br>Use the blacklist functionality to dismiss any suggestions and tune the recommendations.;
                     </p>
         
@@ -214,15 +214,15 @@
                                 g-sm-2 
                                 row-cols-xl-3
                                 g-xxl-4
-                                mt-5" 
+                                mt-4" 
                         id="RecommendedCardsContainer">
                     </div>
 
 
 
-                    <div class="text-center mt-4" id="ErrorMessage">
+                    <div class="text-center" id="ErrorMessage">
                         <div class="alert alert-warning" role="alert">
-                            Please add at least one user to get recommendations.
+                            Please add at least one user in the sidebar to get recommendations
                         </div>
                     </div>
 

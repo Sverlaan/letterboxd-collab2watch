@@ -10,7 +10,7 @@ async function fetchUserData(username) {
         const data = await response.json();
 
         // Reset the username header text after a successful fetch
-        document.getElementById("enterUsernameHeader").textContent = "Letterboxd: ";
+        document.getElementById("inputUsername").placeholder = "Letterboxd username";
 
         // Create and insert user card
         createUserCard(username, data);
@@ -22,7 +22,7 @@ async function fetchUserData(username) {
 
         // Update stats text
         const statsEl = document.getElementById(`user-stats-${username}`);
-        statsEl.textContent = `Watched: ${data.num_movies_watched} | Watchlist: ${data.watchlist_length}`;
+        statsEl.textContent = `Watched: ${data.num_movies_watched} Watchlist: ${data.watchlist_length}`;
 
         // Swap spinner for close button
         const spinner = document.getElementById(`spinner-${username}`);
@@ -41,7 +41,7 @@ async function fetchUserData(username) {
 
     } catch (error) {
         console.error(error);
-        document.getElementById("enterUsernameHeader").textContent = "User not found: ";
+        document.getElementById("inputUsername").placeholder = "User not found";
     }
 }
 
@@ -187,7 +187,7 @@ async function FetchAndCreateRecommendationCards(allUsernames, selectedUsernames
             realRecommendContent.innerHTML = ""
             errorContainer.innerHTML = `
                 <div class="alert alert-warning" role="alert">
-                    Please add at least one user to get recommendations.
+                    Please add at least one user in the sidebar to get recommendations
                 </div>
             `;
             errorContainer.style.display = "block"; // Show error message
@@ -200,7 +200,7 @@ async function FetchAndCreateRecommendationCards(allUsernames, selectedUsernames
             realRecommendContent.innerHTML = "";
             errorContainer.innerHTML = `
                 <div class="alert alert-warning" role="alert">
-                    Please select at least one user to get recommendations.
+                    Please select at least one user to get recommendations
                 </div>
             `;
             errorContainer.style.display = "block"; // Show error message
@@ -219,7 +219,7 @@ async function FetchAndCreateRecommendationCards(allUsernames, selectedUsernames
         if (data.length === 0) {
             errorContainer.innerHTML = `
                 <div class="alert alert-info" role="alert">
-                    No results found for the selected users and filters.
+                    No results found for the selected users and filters
                 </div>
             `;
             errorContainer.style.display = "block"; // Show error message

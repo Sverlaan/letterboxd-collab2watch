@@ -82,7 +82,7 @@ document.getElementById('usernameForm').addEventListener('submit', function (eve
     event.preventDefault();
 
     fetchUserData(document.getElementById('inputUsername').value);
-    document.getElementById('inputUsername').placeholder ='Username';  
+    document.getElementById('inputUsername').placeholder ='Letterbox username';  
     document.getElementById('inputUsername').value = "";
 });
 

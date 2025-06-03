@@ -199,11 +199,11 @@ def fetch_movie_data_for_modal(slug, usernames):
 def fetch_similar_movies(slug, minRating, maxRating, minRuntime, maxRuntime, minYear, maxYear):
 
     start = timer()
-    hits, similar_movies = recommender.get_similar_movies(slug, top_n=5)
+    hits, similar_movies = recommender.get_similar_movies(slug, top_n=6)
     if hits == False:
         return jsonify({"success": False, "message": "No similar movies found", "movies": []})  # Return a valid response with a flag
 
-    movies = retrieve_movies(similar_movies, top_k=5)
+    movies = retrieve_movies(similar_movies, top_k=6)
 
     return jsonify({"success": True, "message": "Similar movies found", "movies": movies})
 

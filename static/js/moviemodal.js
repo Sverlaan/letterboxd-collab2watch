@@ -50,9 +50,9 @@ document.body.addEventListener("click", async function (event) {
             for (let i = 0; i < movies.length; i++) {
                 let similarMovie = movies[i];
                 let similarMovieHtml = `
-                <div class="col">
+                <div class="col-4 col-lg-2">
                     <img src="${similarMovie.poster}" 
-                        class="card card-img-top hover-zoom rounded open-movie-modal" 
+                        class="card card-img-top rounded open-movie-modal" 
                         alt="${similarMovie.title}"
                         slug="${similarMovie.slug}">
                 </div>
@@ -86,37 +86,29 @@ async function CreateModal(movie) {
 
     // Build user scores section
     let userScoresHtml = `
-        <div class="row g-3 mt-1 justify-content-start flex-nowrap overflow-auto no-scrollbar" style="white-space: nowrap;" id="userScoresRow">
-            <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
-                <h5 class="text-center mb-2 text-normal">${movie.rating}</h5>
-                <img src="${letterboxd_logo}" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-normal text-center"><small>Letterboxd</small></p>
-            </div>
-            <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
-                <h5 class="text-center mb-2 ${movie.score_combined_color}">${movie.score_combined}</h5>
-                <img src="https://cdn-icons-png.flaticon.com/512/718/718339.png" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-normal text-center"><small>Combined</small></p>
-            </div>
+        <div class="d-flex overflow-auto gap-3 px-1 no-scrollbar" id="userScoresRow" style="scroll-snap-type: x mandatory;">
+        ${buildScoreBlock(movie.rating, letterboxd_logo, "Letterboxd", "text-normal")}
+        ${buildScoreBlock(movie.score_combined, "https://cdn-icons-png.flaticon.com/512/718/718339.png", "Combined", movie.score_combined_color)}
     `;
-
+    
     for (let i = 0; i < allUsers.length; i++) {
         const user = allUsers[i];
         const scoreData = movie.all_scores.find(u => u.username === user.username);
-
-        userScoresHtml += `
-            <div class="col-md-3 d-flex flex-column align-items-center" style="min-width: 150px;">
-                <h5 class="text-center mb-2 ${scoreData ? scoreData.score_color : 'text-normal'}">${scoreData ? scoreData.score : '--'}</h5>
-                <img src="${user.avatar}" class="rounded-circle" style="width: 60px; height: 60px;">
-                <p class="text-normal text-center"><small>${user.name}</small></p>
-            </div>
-        `;
+    
+        userScoresHtml += buildScoreBlock(
+            scoreData ? scoreData.score : "--",
+            user.avatar,
+            user.name,
+            scoreData ? scoreData.score_color : "text-normal"
+        );
     }
-
-    userScoresHtml += `</div>`;
+  
+  userScoresHtml += `</div>`;
+  
 
     let modalHtml = `
                 <div class="modal fade" id="dynamicModal" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered w-100 w-sm-75 w-md-50 mx-auto custom-modal" style="z-index: 5000;">
+                <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down custom-modal mx-auto">
 
 
 
@@ -136,7 +128,7 @@ async function CreateModal(movie) {
                             <div style="
                                 position: absolute;
                                 top: 0; left: 0; right: 0; bottom: 0;
-                                background: rgba(0, 0, 0, 0.6);
+                                background: rgba(0, 0, 0, 0.7);
                                 z-index: 1;
                             "></div>
 
@@ -172,10 +164,10 @@ async function CreateModal(movie) {
                                         </div>
 
                                         <div class="d-block d-md-none mt-3">
-                                            <p class="card-text no-spacing text-light"><small>Director: ${movie.director}</small></p>
-                                            <p class="card-text no-spacing text-light"><small>Cast: ${movie.actors}</small></p>
+                                            <p class="card-text no-spacing text-muted"><small>Director: ${movie.director}</small></p>
+                                            <p class="card-text no-spacing text-muted"><small>Cast: ${movie.actors}</small></p>
                                             <a href="${movie.trailer}" 
-                                            class="text-decoration-none text-light" 
+                                            class="text-decoration-none" 
                                             target="_blank" rel="noopener noreferrer">
                                             <small>Watch trailer</small>
                                             </a>
@@ -189,12 +181,12 @@ async function CreateModal(movie) {
                                             target="_blank" rel="noopener noreferrer">
                                             ${movie.title} (${movie.year})
                                             </a>
-                                            <h6 class="card-subtitle mt-3 mb-2 text-light">${movie.runtime} mins | ${movie.genres}</h6> 
+                                            <h6 class="card-subtitle mt-3 mb-2 text-muted">${movie.runtime} mins | ${movie.genres}</h6> 
                                             <p class="card-text">${movie.description}</p>
-                                            <p class="card-text no-spacing text-light"><small>Director: ${movie.director}</small></p>
-                                            <p class="card-text no-spacing text-light"><small>Cast: ${movie.actors}</small></p>
+                                            <p class="card-text no-spacing text-muted"><small>Director: ${movie.director}</small></p>
+                                            <p class="card-text no-spacing text-muted"><small>Cast: ${movie.actors}</small></p>
                                             <a href="${movie.trailer}" 
-                                            class="text-decoration-none text-light" 
+                                            class="text-decoration-none" 
                                             target="_blank" rel="noopener noreferrer">
                                             <small>Watch trailer</small>
                                             </a>
@@ -203,7 +195,7 @@ async function CreateModal(movie) {
 
                                     <!-- On small screens: show rest of content under poster+title -->
                                     <div class="d-block d-md-none mt-3">
-                                        <h6 class="card-subtitle mb-2 text-light">${movie.runtime} mins | ${movie.genres}</h6> 
+                                        <h6 class="card-subtitle mb-2 text-muted">${movie.runtime} mins | ${movie.genres}</h6> 
                                         <p class="card-text">${movie.description}</p>
                                         </a>
                                     </div>
@@ -217,12 +209,12 @@ async function CreateModal(movie) {
                         </div>
 
                         <!-- Plain section for similar movies -->
-                        <div class="card-body d-none d-sm-block">
+                        <div class="card-body">
                             <div class="container-fluid p-2" id="similarMoviesContainer">
                                 <div class="mb-2 w-100">
                                     <div class="text-center text-muted fst-italic fs-4">Similar movies:</div>   
                                 </div>
-                                <div class="row g-1 g-lg-3 justify-content-evenly" id="similarMovies"></div>
+                                <div class="row g-1 g-lg-2 justify-content-evenly" id="similarMovies"></div>
                             </div>
                         </div>
 
@@ -237,6 +229,15 @@ async function CreateModal(movie) {
 
 
 
+function buildScoreBlock(score, imgSrc, label, scoreClass) {
+    return `
+      <div class="flex-shrink-0 d-flex flex-column align-items-center" style="width: 150px; scroll-snap-align: start;">
+        <h5 class="text-center mb-2 ${scoreClass}">${score}</h5>
+        <img src="${imgSrc}" class="rounded-circle" style="width: 60px; height: 60px;">
+        <p class="text-normal text-center"><small>${label}</small></p>
+      </div>
+    `;
+}
 
 
 
