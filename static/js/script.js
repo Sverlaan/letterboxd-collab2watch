@@ -10,7 +10,7 @@ async function fetchUserData(username) {
         const data = await response.json();
 
         // Reset the username header text after a successful fetch
-        document.getElementById("inputUsername").placeholder = "Letterboxd username";
+        document.getElementById("inputUsername").placeholder = "Enter Letterboxd username";
 
         // Create and insert user card
         createUserCard(username, data);

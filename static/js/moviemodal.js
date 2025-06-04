@@ -112,13 +112,13 @@ async function CreateModal(movie) {
 
 
 
-                    <div class="modal-content">
+                    <div class="modal-content bg-dark" data-bs-theme="dark">
                     <div class="modal-body p-0">
 
 
 
                         <!-- Background section (banner + user scores) -->
-                        <div class="card position-relative text-white" style="
+                        <div class="card position-relative" style="
                             border: none;
                             background-image: url('${movie.banner}');
                             background-size: cover;
@@ -128,7 +128,7 @@ async function CreateModal(movie) {
                             <div style="
                                 position: absolute;
                                 top: 0; left: 0; right: 0; bottom: 0;
-                                background: rgba(0, 0, 0, 0.7);
+                                background: rgba(0, 0, 0, 0.65);
                                 z-index: 1;
                             "></div>
 
@@ -186,7 +186,7 @@ async function CreateModal(movie) {
                                             <p class="card-text no-spacing text-muted"><small>Director: ${movie.director}</small></p>
                                             <p class="card-text no-spacing text-muted"><small>Cast: ${movie.actors}</small></p>
                                             <a href="${movie.trailer}" 
-                                            class="text-decoration-none" 
+                                            class="text-decoration-none"
                                             target="_blank" rel="noopener noreferrer">
                                             <small>Watch trailer</small>
                                             </a>
@@ -211,10 +211,7 @@ async function CreateModal(movie) {
                         <!-- Plain section for similar movies -->
                         <div class="card-body">
                             <div class="container-fluid p-2" id="similarMoviesContainer">
-                                <div class="mb-2 w-100">
-                                    <div class="text-center text-muted fst-italic fs-4">Similar movies:</div>   
-                                </div>
-                                <div class="row g-1 g-lg-2 justify-content-evenly" id="similarMovies"></div>
+                                <div class="row g-2 g-lg-2 justify-content-evenly" id="similarMovies"></div>
                             </div>
                         </div>
 

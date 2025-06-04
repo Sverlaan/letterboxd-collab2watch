@@ -19,14 +19,20 @@
         </button>
 
         <!-- Top-Right Theme Toggle -->
-        <div class="position-absolute top-0 end-0 m-3">
+        <div class="position-fixed top-0 end-0 m-3" style="z-index: 2000;">
             <div class="d-flex align-items-center gap-2">
-                <div id="go-spinner" class="spinner-border text-secondary" style="display:none; width: 40px; height: 40px;"></div>
-                <button class="btn btn-secondary position-fixed top-0 end-0 m-3" style="width: 50pt; font-size: 18pt; z-index: 2000;" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle Dark/Light Mode">
-                <i class="bi bi-moon-stars" id="theme-icon"></i>
+                <div id="go-spinner" class="spinner-border text-secondary"
+                    style="display:none; width: 40px; height: 40px;"></div>
+                <button class="btn btn-secondary"
+                        style="width: 50pt; font-size: 18pt;"
+                        onclick="toggleTheme()"
+                        id="theme-toggle"
+                        aria-label="Toggle Dark/Light Mode">
+                    <i class="bi bi-moon-stars" id="theme-icon"></i>
                 </button>
             </div>
         </div>
+
   
           
     
@@ -37,16 +43,16 @@
             <!-- <h4 class="text-center text-muted">Letterboxd Group Recommendations</h4> -->
     
 
-            <div class="d-flex flex-column align-items-center text-center mt-5">
+            <div class="d-flex flex-column align-items-center text-center mt-5 p-4 pb-3">
 
                 <h5 class="text-center">Users</h5>
         
                 <!-- Top: Username Form -->
-                <form class="d-flex justify-content-center align-items-center gap-2 p-2" id="usernameForm">
+                <form class="d-flex w-100 gap-2 p-2" id="usernameForm" id="usernameForm">
                     <!-- <p id="enterUsernameHeader" style="font-size: 14pt" class="mb-0 text-muted">Letterboxd: </p> -->
-                    <input type="text" class="form-control"
+                    <input type="text" class="form-control flex-grow-1"
                     id="inputUsername"
-                    placeholder="Letterboxd username"
+                    placeholder="Enter Letterboxd username"
                     autocomplete="off"
                     style="font-size: 14pt;">
                     <button type="submit"
@@ -60,8 +66,8 @@
     
             <!-- User cards -->
             <div class = "row mb-2 justify-content-center align-items-top">
-                <div class="container p-4">
-                    <div class="row align-items-top justify-content-center" id="userRow">
+                <div class="container">
+                    <div class="row align-items-top justify-content-center mx-3 mb-3" id="userRow">
                         <!-- User cards will be appended here -->
                     </div>
                 </div>
@@ -78,7 +84,7 @@
 
                 
 
-                <div class="container p-3">
+                <div class="container p-4">
 
                     <h5 class="text-center">Filters</h5>
 
@@ -150,7 +156,7 @@
             <hr class="my-4 w-75 mx-auto">
 
             <!-- Footer -->
-            <footer class="text-center bg-secondary-subtle text-lg-start p-3 mb-5" id="footer">
+            <footer class="text-center bg-secondary-subtle text-lg-start p-4 mb-5" id="footer">
 
                 <h5 class="text-center">Credits</h5>
 
@@ -185,7 +191,7 @@
 
 
 
-        <div class="col mb-5" style="overflow-y: auto;">
+        <div class="col" style="overflow-y: auto;">
         
             <!-- Parent container for all the content -->
             <div class="px-1 px-lg-2 px-xxl-5 mb-5" id="contentContainer">    
@@ -200,7 +206,7 @@
                 </div>
                   
         
-                <div class="container mb-5" id="RecommendContainer">
+                <div class="container" id="RecommendContainer" style="margin-bottom: 8rem;">
         
                     <p class="text-center text-muted no-spacing mt-4 d-none d-sm-block" id="categoryText">
                         Recommendations for movies the selected users have not seen!<br>Use the blacklist functionality to dismiss any suggestions and tune the recommendations.;
