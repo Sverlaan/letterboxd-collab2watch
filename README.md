@@ -6,7 +6,7 @@ The website is currently hosted through Railway [here](https://letterboxd-collab
 Due to costs, it may not always be available.
 
 ## Features
-Using the sidebar, Letterboxd users can be added to the recommendation group. Within this group, users can be selected (eye-icon). The main screen has three tabs:
+Using the sidebar, Letterboxd users can be added to the recommendation group. You can add up to eight users, although keep in mind that the recommendations will be less personalized. Within this group, users can be selected (eye-icon). The main screen has three tabs:
 
 - **Watchlist**: Shows the common (overlapping) watchlist of the selected users, sorted by the average predicted rating of the whole group.
 - **Recommendations**: Recommends movies the selected users have not yet seen.
