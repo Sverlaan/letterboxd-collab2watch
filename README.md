@@ -2,8 +2,8 @@
 A web tool that recommends movies for multiple parties by combining Letterboxd user profiles and applying group collaborative filtering.
 
 ## Hosted website
-The website is currently hosted through Railway [here](https://letterboxd-collab2watch-production.up.railway.app).
-Due to costs, it may not always be available.
+The website is currently hosted through Railway [here](https://letterboxd-collab2watch-production.up.railway.app). It is available for both desktop and mobile browsers.
+Due to costs, it may not always be available online.
 
 ## Features
 Using the sidebar, Letterboxd users can be added to the recommendation group. You can add up to eight users, although keep in mind that the recommendations will be less personalized. Within this group, users can be selected (eye-icon). The main screen has three tabs:
