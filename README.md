@@ -16,18 +16,11 @@ The sidebar also has options for filtering the results based on runtime, release
 
 ## Screenshots
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="screenshots/desktop_dark.png" alt="desktop" height="300px" /><br />
-      <sub>Desktop view</sub>
-    </td>
-    <td align="center">
-      <img src="screenshots/mobile_dark.png" alt="mobile" height="300px" /><br />
-      <sub>Mobile view</sub>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="screenshots/desktop_dark.png" alt="desktop" height="300px" />
+  <img src="screenshots/mobile_dark.png" alt="mobile" height="300px" />
+</p>
+
 
 
 
