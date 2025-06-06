@@ -17,9 +17,11 @@ The sidebar also has options for filtering the results based on runtime, release
 ## Screenshots
 
 <p align="center">
-  <img src="screenshots/desktop_dark.png" alt="desktop" max-height="300px" />
-  <img src="screenshots/mobile_dark.png" alt="mobile" max-height="300px" />
+  <img src="screenshots/desktop_dark.png" alt="desktop" style="width: 77%;" />
+  <img src="screenshots/mobile_dark.png" alt="mobile" style="width: 19%;" />
 </p>
+
+
 
 
 
