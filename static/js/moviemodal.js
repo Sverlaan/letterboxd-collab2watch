@@ -112,13 +112,13 @@ async function CreateModal(movie) {
 
 
 
-                    <div class="modal-content bg-dark" data-bs-theme="dark">
+                    <div class="modal-content bg-dark rounded-3" data-bs-theme="dark">
                     <div class="modal-body p-0">
 
 
 
                         <!-- Background section (banner + user scores) -->
-                        <div class="card position-relative" style="
+                        <div class="card position-relative rounded-3 overflow-hidden" style="
                             border: none;
                             background-image: url('${movie.banner}');
                             background-size: cover;

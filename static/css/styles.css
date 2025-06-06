@@ -23,6 +23,7 @@
     font-weight: 100;
     padding: 0.6rem 1.2rem;
     border-radius: 0.5rem;
+    min-width: 200px;
 }
 
 .category-btn.active {
