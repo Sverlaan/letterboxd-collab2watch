@@ -5,6 +5,23 @@ A web tool that recommends movies for multiple parties by combining Letterboxd u
 The website is currently hosted through Railway [here](https://letterboxd-collab2watch-production.up.railway.app).
 Due to costs, it may not always be available.
 
+## Features
+Using the sidebar, Letterboxd users can be added to the recommendation group. Within this group, users can be selected (eye-icon). The main screen has three tabs:
+
+- **Watchlist**: Shows the common (overlapping) watchlist of the selected users, sorted by the average predicted rating of the whole group.
+- **Recommendations**: Recommends movies the selected users have not yet seen.
+- **Rewatches**: Shows overlapping movies the selected users have already seen, sorted by the average predicted rating of the non-selected users.
+
+The sidebar also has options for filtering the results based on runtime, release date, etc. The blacklist functionality can be used to tweak the recommendations. Some additional information is provided when clicking on a movie, along with suggestions for other similar movies.
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/desktop_dark.png" alt="desktop" height="400px" />
+  <img src="screenshots/mobile_dark.png" alt="mobile" height="400px" />
+</p>
+
+
 ## Run locally
 Everything needed, including the recommendation model and a movie details database, are available in this repository. simply clone or download the repo.
 
