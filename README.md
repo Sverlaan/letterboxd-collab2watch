@@ -17,8 +17,8 @@ The sidebar also has options for filtering the results based on runtime, release
 ## Screenshots
 
 <p align="center">
-  <img src="screenshots/desktop_dark.png" alt="desktop" height="400px" />
-  <img src="screenshots/mobile_dark.png" alt="mobile" height="400px" />
+  <img src="screenshots/desktop_dark.png" alt="desktop" height="300px" />
+  <img src="screenshots/mobile_dark.png" alt="mobile" height="300px" />
 </p>
 
 
